@@ -17,7 +17,7 @@ void connect(func fp)
 			select = list(view);
 			switch (select)
 			{
-			case 1:
+			case 0:
 				(strcmp(view, "all") == 0)
 					? strcpy(view, "none") : strcpy(view, "all");
 				break;

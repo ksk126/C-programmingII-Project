@@ -7,6 +7,7 @@
 //main.c에 남아야되는거. int main()이랑 run()함수.
 //connect.c파일 하나 만들고 UI.c하나 만들고 list.c 만들고
 //append.c, retouch.c 이렇게?하면 ? 될듯?
+//q는 무조건 뒤로가기!!!!!!!!!!!!!!
 /*
 0.목록
 1.일정 추가
@@ -23,6 +24,7 @@ int main()
 void run()
 {
 	func fp = NULL;
+	Todo *todo = NULL;
 	int select = 0;
 	while (1)
 	{
