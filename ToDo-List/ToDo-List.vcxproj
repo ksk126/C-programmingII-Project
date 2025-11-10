@@ -127,16 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="appendTodo.c" />
-    <ClCompile Include="connect.c" />
-    <ClCompile Include="listTodo.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="retouchTodo.c" />
-    <ClCompile Include="UI.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="function.h" />
-    <ClInclude Include="struct.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

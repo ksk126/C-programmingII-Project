@@ -18,28 +18,5 @@
     <ClCompile Include="main.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="UI.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="listTodo.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="appendTodo.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="retouchTodo.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="connect.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="struct.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="function.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
