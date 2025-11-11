@@ -10,7 +10,6 @@
 //main.c에 남아야되는거. int main()이랑 run()함수.
 //connect.c파일 하나 만들고 UI.c하나 만들고 list.c 만들고
 //append.c, retouch.c 이렇게?하면 ? 될듯?
-//q는 무조건 뒤로가기!!!!!!!!!!!!!!
 /*
 0.목록
 1.일정 추가
@@ -20,14 +19,15 @@
 
 void run();
 void openfile();
-void login(int sign, FILE * fp);
-int ui(FILE * fp);
+char* login(int sign, FILE * fp);
+int ui(FILE * fp, const char* path);
 void appendTodo();
 void inputLogin(char* id, char* pw, const char* message);
 int signup(char *id, char *pw);
 int signin(char *id, char *pw, FILE *fp);
 int sameID(char* id, char* pw, FILE *fp);
 void appendMember(char* id, char* pw, FILE *fp);
+char* settingPath(char *id, FILE* fp);
 
 int main()
 {
@@ -46,7 +46,7 @@ void openfile()
 	
 	FILE* fp = NULL;
 	
-	fp = fopen("c:\\TodoList\\member.txt", "w");
+	fp = fopen("c:\\TodoList\\member.txt", "a");
 	if (fp == NULL)
 	{
 		printf("파일 열기 실패");
@@ -60,10 +60,13 @@ void openfile()
 
 void run()
 {
+	char id[MAXLOGIN];
+	char path[LINE];
 	FILE* fp = NULL;
 	int sign = 1;
-	login(sign, fp);
-	ui(fp);
+	strcpy(id, login(sign, fp));
+	strcpy(path, settingPath(id, fp));
+	ui(fp, path);
 
 	return;
 }
@@ -83,7 +86,7 @@ void inputLogin(char* id, char* pw, const char* message)
 	return;
 }
 
-void login(int sign, FILE* fp)
+char* login(int sign, FILE* fp)
 {
 	char id[MAXLOGIN];
 	char pw[MAXLOGIN];
@@ -91,7 +94,7 @@ void login(int sign, FILE* fp)
 	if (fp == NULL)
 	{
 		printf("회원 목록을 확인할 수 없습니다.");
-		return;
+		exit(0);
 	}
 
 	fseek(fp, 0, SEEK_END);
@@ -109,7 +112,7 @@ void login(int sign, FILE* fp)
 			signup(id, pw);
 			if (!sameID(id, pw, fp))
 			{
-				printf("회원가입 실패");
+				printf("회원가입 실패\n");
 				Sleep(1000);
 				system("cls");
 				continue;
@@ -126,7 +129,7 @@ void login(int sign, FILE* fp)
 		//로그인
 		if (signin(id, pw, fp))
 		{
-			printf("로그인 성공");
+			printf("로그인 성공\n");
 			Sleep(1000);
 			break;
 		}
@@ -147,20 +150,17 @@ void login(int sign, FILE* fp)
 			}
 			else
 			{
-				printf("잘못 입력하였습니다.");
+				printf("잘못 입력하였습니다.\n");
 				Sleep(1000);
 			}
 		}
 	}
-	return;
+	return id;
 }
 
 //member,txt파일에 회원정보 추가, memberTodo 파일 생성
 void appendMember(char* id, char* pw, FILE* fp)
 {
-	char path[128];
-	sprintf(path, "c:\\TodoList\\%s.txt", id);
-
 	fp = fopen("c:\\TodoList\\member.txt", "a");
 	if (fp == NULL)
 	{
@@ -172,7 +172,15 @@ void appendMember(char* id, char* pw, FILE* fp)
 
 	fclose(fp);
 
-	fp = fopen(path, "w");
+	return;
+}
+
+char* settingPath(char *id, FILE* fp)
+{
+	char path[LINE];
+	sprintf(path, "c:\\TodoList\\%s.txt", id);
+
+	fp = fopen(path, "a");
 	if (fp == NULL)
 	{
 		printf("파일 추가 실패");
@@ -183,7 +191,7 @@ void appendMember(char* id, char* pw, FILE* fp)
 
 	printf("회원가입 성공\n");
 
-	return;
+	return path;
 }
 
 //회원가입
@@ -195,6 +203,7 @@ int signup(char* id, char *pw)
 	return;
 }
 
+//로그인
 int signin(char *id, char *pw, FILE *fp)
 {
 	system("cls");
@@ -259,15 +268,25 @@ int sameID(char* id, char* pw, FILE *fp)
 	return 1;
 }
 
-int ui(FILE * fp)
+int ui(FILE * fp, const char* path)
 {
+	fp = fopen(path, "r");
+	if (fp == NULL)
+	{
+		printf("파일을 불러올 수 없습니다.");
+		exit(0);
+	}
+	fputs();
+
+	fclose(fp);
+
 	system("cls");
 	int select = 0;
 	printf("----------메뉴---------\n");
 	printf("0. 목록\n");
 	printf("1. 일정 추가\n");
 	printf("2. 수정 및 삭제\n");
-	printf("3. 종료\n");
+	printf("3. 로그아웃\n");
 	printf("----------------------=\n");
 	printf("입력: ");
 	scanf("%d", &select);
