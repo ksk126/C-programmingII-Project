@@ -276,8 +276,8 @@ void print0check(const char* path)
     {
         for (int j = i + 1; j < count; j++)
         {
-            if (todos[i].month < todos[j].month ||
-                (todos[i].month == todos[j].month && todos[i].day < todos[j].day))
+            if (todos[i].month > todos[j].month ||
+                (todos[i].month == todos[j].month && todos[i].day > todos[j].day))
             {
                 Todo temp = todos[i];
                 todos[i] = todos[j];
