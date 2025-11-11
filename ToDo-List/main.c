@@ -29,7 +29,6 @@ int signup(char *id, char *pw, FILE *fp);
 int signin(char *id, char *pw, FILE *fp);
 int sameID(char* id, char* pw, FILE *fp);
 void appendMember(char* id, char* pw, FILE *fp);
-char* settingPath(char* id, FILE* fp, char* path);
 
 typedef struct todo {
 	int month;
@@ -69,15 +68,10 @@ void openfile()
 
 void run()
 {
-	char id[MAXLOGIN];
-	char pw[MAXLOGIN];
-	char path[LINE];
 	FILE* fp = NULL;
 	int sign = 1;
-	Todo list = { 0 };
-	strcpy(id, login(id, pw, sign, fp));
-	strcpy(path, settingPath(id, fp));
-	ui(fp, list, path);
+	login(sign, fp);
+	ui(fp);
 
 	return;
 }
@@ -101,7 +95,7 @@ int inputLogin(char* id, char* pw, const char* message)
 	return 0;
 }
 
-char* login(char *id, char *pw, int sign, FILE* fp)
+void login(int sign, FILE* fp)
 {
 	fp = fopen("c:\\TodoList\\member.txt", "r");
 	if (fp == NULL)
@@ -125,7 +119,10 @@ char* login(char *id, char *pw, int sign, FILE* fp)
 		{
 			if (signup(id, pw, fp))
 			{
-				sign = 1;
+				printf("회원가입 실패");
+				Sleep(1000);
+				system("cls");
+				continue;
 			}
 			else
 			{
@@ -181,14 +178,7 @@ void appendMember(char* id, char* pw, FILE* fp)
 
 	fclose(fp);
 
-	return;
-}
-
-char* settingPath(char *id, FILE* fp, char *path)
-{
-	sprintf(path, "c:\\TodoList\\%s.txt", id);
-
-	fp = fopen(path, "a");
+	fp = fopen(path, "w");
 	if (fp == NULL)
 	{
 		printf("파일 추가 실패");
@@ -197,7 +187,9 @@ char* settingPath(char *id, FILE* fp, char *path)
 
 	fclose(fp);
 
-	return path;
+	printf("회원가입 성공\n");
+
+	return;
 }
 
 //회원가입
@@ -294,22 +286,8 @@ int sameID(char* id, char* pw, FILE *fp)
 	return 1;
 }
 
-void ui(FILE * fp, Todo list, const char* path)
+int ui(FILE * fp)
 {
-	char line[LINE];
-	fp = fopen(path, "r");
-	if (fp == NULL)
-	{
-		printf("파일을 불러올 수 없습니다.");
-		exit(0);
-	}
-	while (fgets(line, sizeof(line), fp))
-	{
-		printf("%s\n", line);
-	}
-
-	fclose(fp);
-
 	system("cls");
 	int select = 0;
 	printf("----------메뉴---------\n");
