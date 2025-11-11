@@ -25,20 +25,26 @@ typedef struct todo
 // 함수 선언
 void run();
 void openfile();
-void login(int sign, char* path);
+
 void ui(Todo list, const char* path);
 void uiConnect(int select, const char* path, Todo list, Todo* todos);
+
+void print0check(const char* path, Todo* todos);
+
+void login(int sign, char* path);
 int inputLogin(const char* message);
 int signup(char* path);
 int signin();
 int sameID();
 void appendMember(char* path);
+
 void settingPath(char* path);
-void print0check(const char* path, Todo* todos);
+
 int loadTodos(const char* path, Todo* todos);
 void saveTodos(const char* path, Todo* todos, int count);
 void appendTodo(const char* path, Todo list, Todo* todos);
 void qsortTodos(int count, Todo* todos);
+
 void retouchTodo(const char* path, Todo list, Todo* todos);
 int printTodoNum(int month, int day, int fcount, int count, int* found, Todo* todos);
 
