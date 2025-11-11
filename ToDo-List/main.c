@@ -12,6 +12,17 @@
 
 char id[MAXLOGIN];
 char pw[MAXLOGIN];
+void run();
+void openfile();
+char* login(int sign, FILE * fp);
+void ui(FILE* fp, Todo list, const char* path);
+void uiConnect(int select, const char* path, Todo list);
+void appendTodo(const char* path, Todo list);
+int inputLogin(char* id, char* pw, const char* message);
+int signup(char *id, char *pw, FILE *fp);
+int signin(char *id, char *pw, FILE *fp);
+int sameID(char* id, char* pw, FILE *fp);
+void appendMember(char* id, char* pw, FILE *fp);
 
 typedef struct todo {
     int month;
@@ -58,6 +69,12 @@ void run() {
     char path[LINE];
     Todo list = { 0 };
     int sign = 1;
+void run()
+{
+	FILE* fp = NULL;
+	int sign = 1;
+	login(sign, fp);
+	ui(fp);
 
     login(sign, path);
 
