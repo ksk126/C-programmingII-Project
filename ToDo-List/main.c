@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <windows.h>
-#include <direct.h>
 
 #define MAXLOGIN 20
 #define LINE 128
@@ -12,17 +11,6 @@
 
 char id[MAXLOGIN];
 char pw[MAXLOGIN];
-void run();
-void openfile();
-char* login(int sign, FILE * fp);
-void ui(FILE* fp, Todo list, const char* path);
-void uiConnect(int select, const char* path, Todo list);
-void appendTodo(const char* path, Todo list);
-int inputLogin(char* id, char* pw, const char* message);
-int signup(char *id, char *pw, FILE *fp);
-int signin(char *id, char *pw, FILE *fp);
-int sameID(char* id, char* pw, FILE *fp);
-void appendMember(char* id, char* pw, FILE *fp);
 
 typedef struct todo {
     int month;
@@ -43,7 +31,7 @@ int signin();
 int sameID();
 void appendMember(char* path);
 void settingPath(char* path);
-void print0cheak(char* path);
+void print0check(char* path);
 
 int main()
 {
@@ -68,13 +56,8 @@ void openfile()
 void run() {
     char path[LINE];
     Todo list = { 0 };
-    int sign = 1;
-void run()
-{
 	FILE* fp = NULL;
 	int sign = 1;
-	login(sign, fp);
-	ui(fp);
 
     login(sign, path);
 
@@ -223,7 +206,7 @@ int signin() {
 
     char line[LINE];
     char fileId[MAXLOGIN], filePw[MAXLOGIN];
-    inputLogin(id, pw, "로그인 (0 입력시 종료)\n");
+    inputLogin("로그인 (0 입력시 종료)\n");
 
     while (fgets(line, sizeof(line), fp))
     {
@@ -261,34 +244,61 @@ int sameID() {
     return 1;
 }
 
-void print0cheak(char* path)
+void print0check(const char* path)
 {
-    int cheak;
-    Todo list = { 0 };
-    FILE* fp = NULL;
-    fp = fopen(path, "r");
+    FILE* fp = fopen(path, "r");
     if (fp == NULL)
     {
-        printf("파일 불러오기 실패");
+        printf("파일 불러오기 실패\n");
         return;
     }
-    
+
+    Todo todos[200] = { 0 };
+    int check, count = 0;
     char line[LINE];
+
     while (fgets(line, sizeof(line), fp))
     {
-        if (sscanf(line, "%d | %d/%d | %[^|]| %[^\n]", &cheak, &list.month, &list.day, list.tasks, list.memo) >= 4)
+        if (sscanf(line, "%d | %d/%d | %[^|]| %[^\n]",
+            &check, &todos[count].month, &todos[count].day,
+            todos[count].tasks, todos[count].memo) >= 4)
         {
-            if (cheak == 0)
+            if (check == 0)
             {
-                //날짜부터 출력
-                printf("%02d/%02d | %s | %s\n", list.month, list.day, list.tasks, list.memo);
+                count++;
+            }
+        }
+    }
+    fclose(fp);
+
+    //날짜순 정렬
+    for (int i = 0; i < count - 1; i++)
+    {
+        for (int j = i + 1; j < count; j++)
+        {
+            if (todos[i].month < todos[j].month ||
+                (todos[i].month == todos[j].month && todos[i].day < todos[j].day))
+            {
+                Todo temp = todos[i];
+                todos[i] = todos[j];
+                todos[j] = temp;
             }
         }
     }
 
-    fclose(fp);
-
-    return;
+    //출력
+    if (count == 0)
+    {
+        printf("(미완료 일정 없음)\n");
+    }
+    else
+    {
+        for (int i = 0; i < count; i++)
+        {
+            printf("%02d/%02d | %s | %s\n",
+                todos[i].month, todos[i].day, todos[i].tasks, todos[i].memo);
+        }
+    }
 }
 
 void ui(Todo list, const char* path)
@@ -296,7 +306,7 @@ void ui(Todo list, const char* path)
     system("cls");
     int select = 0;
     printf("-----미완료된 목록-----\n");
-    print0cheak(path);
+    print0check(path);
     printf("\n");
     printf("----------메뉴---------\n");
     printf("0. 목록\n");
@@ -326,7 +336,7 @@ void uiConnect(int select, const char* path, Todo list)
         printf("수정/삭제 기능 준비중\n");
         break;
     case 3:
-        login("0", "0", 1, path);
+        login(1, path);
         break;
     default:
         printf("잘못 입력하였습니다.");
@@ -367,6 +377,25 @@ void appendTodo(const char* path, Todo list)
 
     printf("일정 추가 완료!\n");
     Sleep(1000);
+
+    while (1)
+    {
+        printf("이어서 등록하겠습니까? (y/n)\n");
+        char select = getch();
+        if (select == 'y')
+        {
+            uiConnect(1, path, list);
+        }
+        else if (select == 'n')
+        {
+            break;
+        }
+
+        printf("잘못 입력하였습니다.");
+        Sleep(1000);
+        system("cls");
+    }
+
 
     return;
 }
