@@ -12,7 +12,12 @@
 
 char id[MAXLOGIN];
 char pw[MAXLOGIN];
+char path[LINE];
+char pathlist[LINE];
+char pathfriends[LINE];
+char pathteams[LINE];
 
+// ? 전역 변수 선언
 typedef struct todo
 {
     int check;
@@ -22,31 +27,48 @@ typedef struct todo
     char memo[MAX];
 } Todo;
 
+Todo list = { 0 };
+Todo todos[200] = { 0 };
+Todo todo = { 0 };
+
 // 함수 선언
 void run();
 void openfile();
+void makefile();
 
-void ui(Todo list, const char* path);
-void uiConnect(int select, const char* path, Todo list, Todo* todos);
+void appendMember();
+void appendList();
+void appendFriends();
+void appendTeams();
 
-void print0check(const char* path, Todo* todos);
+void mainUi();
+void uiConnect(int select);
 
-void login(int sign, char* path);
+void print0check();
+
+void login(int sign);
 int inputLogin(const char* message);
-int signup(char* path);
+int signup();
 int signin();
 int sameID();
-void appendMember(char* path);
 
-void settingPath(char* path);
+void settingPath();
 
-int loadTodos(const char* path, Todo* todos);
-void saveTodos(const char* path, Todo* todos, int count);
-void appendTodo(const char* path, Todo list, Todo* todos);
-void qsortTodos(int count, Todo* todos);
+void category();
+void friends();
+void teams();
 
-void retouchTodo(const char* path, Todo list, Todo* todos);
-int printTodoNum(int month, int day, int fcount, int count, int* found, Todo* todos);
+void categoryConnect(int select);
+void friendsConnect(int select);
+void teamsConnect(int select);
+
+int loadTodos();
+void saveTodos(int count);
+void appendTodo();
+void qsortTodos(int count);
+
+void retouchTodo();
+int printTodoNum(int month, int day, int fcount, int count, int* found);
 
 int main()
 {
@@ -69,17 +91,20 @@ void openfile()
     fclose(fp);
 }
 
+void makefile()
+{
+    _mkdir(path);
+    return;
+}
+
 void run()
 {
-    char path[LINE];
-    Todo list = { 0 };
     int sign = 1;
-
-    login(sign, path);
+    login(sign);
 
     while (1)
     {
-        ui(list, path);
+        mainUi();
     }
 }
 
@@ -105,13 +130,13 @@ int inputLogin(const char* message)
 }
 
 // 회원에 따른 파일 경로 설정
-void settingPath(char* path)
+void settingPath()
 {
-    sprintf(path, "c:\\TodoList\\%s.txt", id);
+    sprintf(path, "c:\\TodoList\\%s", id);
 }
 
 // 로그인 총괄 함수
-void login(int sign, char* path)
+void login(int sign)
 {
     FILE* fp = fopen("c:\\TodoList\\member.txt", "r");
     if (!fp)
@@ -135,7 +160,7 @@ void login(int sign, char* path)
 
         if (sign == 0)
         {
-            if (signup(path))
+            if (signup())
             {
                 sign = 1;
                 continue;
@@ -152,7 +177,7 @@ void login(int sign, char* path)
         {
             printf("로그인 성공!\n");
             Sleep(800);
-            settingPath(path);
+            settingPath();
             break;
         }
         else
@@ -167,30 +192,8 @@ void login(int sign, char* path)
     }
 }
 
-// 회원목록에 id pw 추가
-void appendMember(char* path)
-{
-    FILE* fp = fopen("c:\\TodoList\\member.txt", "a");
-    if (!fp)
-    {
-        printf("파일 정보 추가 실패\n");
-        exit(0);
-    }
-
-    fprintf(fp, "ID:%s,PW:%s\n", id, pw);
-    fclose(fp);
-
-    fp = fopen(path, "w");
-    if (!fp)
-    {
-        printf("개인 파일 생성 실패\n");
-        exit(0);
-    }
-    fclose(fp);
-}
-
 // 회원가입
-int signup(char* path)
+int signup()
 {
     int select = inputLogin("회원가입을 종료하려면 0, 로그인 하려면 1.\n");
 
@@ -208,8 +211,8 @@ int signup(char* path)
 
     printf("회원가입 성공!\n");
     Sleep(800);
-    settingPath(path);
-    appendMember(path);
+    settingPath();
+    appendMember();
     return 1;
 }
 
@@ -274,30 +277,27 @@ int sameID()
 }
 
 // 파일 목록 구조체 배열로 불러오기
-int loadTodos(const char* path, Todo* todos)
+int loadTodos()
 {
-    FILE* fp = fopen(path, "r");
+    FILE* fp = fopen(pathlist, "r");
     if (!fp)
     {
-        // 파일이 없으면 0개로 간주
         return 0;
     }
 
-    int check = 0;
     int count = 0;
     char line[LINE];
 
     while (fgets(line, sizeof(line), fp))
     {
         int r = sscanf(line, "%d | %d/%d | %[^|] | %[^\n]",
-            &check,
+            &todos[count].check,
             &todos[count].month,
             &todos[count].day,
             todos[count].tasks,
             todos[count].memo);
         if (r == 5)
         {
-            todos[count].check = check ? 1 : 0;
             count++;
             if (count >= MAX) break;
         }
@@ -308,7 +308,7 @@ int loadTodos(const char* path, Todo* todos)
 }
 
 // 구조체 배열 오름차순 정리
-void qsortTodos(int count, Todo* todos)
+void qsortTodos(int count)
 {
     for (int i = 0; i < count - 1; i++)
     {
@@ -326,10 +326,10 @@ void qsortTodos(int count, Todo* todos)
 }
 
 // 미완료 목록만 출력
-void print0check(const char* path, Todo* todos)
+void print0check()
 {
-    int count = loadTodos(path, todos);
-    qsortTodos(count, todos);
+    int count = loadTodos();
+    qsortTodos(count);
 
     int printed = 0;
     for (int i = 0; i < count; i++)
@@ -338,7 +338,7 @@ void print0check(const char* path, Todo* todos)
         {
             if (!printed)
             {
-                printf("-----미완료된 목록-----\n");
+                printf("------미완료된 목록------\n");
             }
             printf("%02d/%02d | %s| %s\n",
                 todos[i].month, todos[i].day,
@@ -354,48 +354,47 @@ void print0check(const char* path, Todo* todos)
 }
 
 // 메뉴 출력
-void ui(Todo list, const char* path)
+void mainUi()
 {
-    Todo todos[200] = { 0 };
     system("cls");
 
     int select = 0;
-    print0check(path, todos);
+    print0check();
     printf("\n");
 
-    printf("----------메뉴---------\n");
-    printf("0. 목록 (준비중)\n");
-    printf("1. 일정 추가\n");
-    printf("2. 수정 및 삭제\n");
-    printf("3. 로그아웃\n");
-    printf("4. 프로그램 종료\n");
+    printf("----------메인 메뉴---------\n");
+    printf("[1] 카테고리 관리\n");
+    printf("[2] 친구 관리\n");
+    printf("[3] 팀 관리\n");
     printf("-----------------------\n");
+    printf("[0] 로그아웃\n");
     printf("입력: ");
     scanf("%d", &select);
 
-    uiConnect(select, path, list, todos);
+    uiConnect(select);
+
+    return;
 }
 
 // ui입력 처리
-void uiConnect(int select, const char* path, Todo list, Todo* todos)
+void uiConnect(int select)
 {
     switch (select)
     {
     case 0:
-        printf("목록 표시 기능 준비중\n");
-        Sleep(1000);
+        login(1);
         break;
 
     case 1:
-        appendTodo(path, list, todos);
+        category();
         break;
 
     case 2:
-        retouchTodo(path, list, todos);
+        friends();
         break;
 
     case 3:
-        login(1, (char*)path);
+        teams();
         break;
 
     case 4:
@@ -409,37 +408,37 @@ void uiConnect(int select, const char* path, Todo list, Todo* todos)
 }
 
 // 할일 추가
-void appendTodo(const char* path, Todo list, Todo* todos)
+void appendTodo()
 {
     system("cls");
 
-    char todo[128];
+    char input[128];
 
     printf("날짜|할일|비고 형식으로 입력, 뒤로 가려면 0 (예: 12/25|크리스마스|선물 준비)\n");
-    getchar(); // 입력 버퍼 비우기
-    fgets(todo, sizeof(todo), stdin);
-    todo[strcspn(todo, "\n")] = 0;
+    getchar();
+    fgets(input, sizeof(input), stdin);
+    input[strcspn(input, "\n")] = 0;
 
-    if (!strcmp(todo, "0"))
+    if (!strcmp(input, "0"))
     {
         return;
     }
 
-    char* ptr = strtok(todo, "/");
-    if (ptr) list.month = atoi(ptr);
+    char* ptr = strtok(input, "/");
+    if (ptr) todo.month = atoi(ptr);
 
     ptr = strtok(NULL, "|");
-    if (ptr) list.day = atoi(ptr);
+    if (ptr) todo.day = atoi(ptr);
 
     ptr = strtok(NULL, "|");
-    if (ptr) strcpy(list.tasks, ptr);
+    if (ptr) strcpy(todo.tasks, ptr);
 
     ptr = strtok(NULL, "|");
-    if (ptr) strcpy(list.memo, ptr);
+    if (ptr) strcpy(todo.memo, ptr);
 
-    list.check = 0;
+    todo.check = 0;
 
-    FILE* fp = fopen(path, "a");
+    FILE* fp = fopen(pathlist, "a");
     if (!fp)
     {
         printf("파일 열기 실패\n");
@@ -447,14 +446,14 @@ void appendTodo(const char* path, Todo list, Todo* todos)
     }
 
     fprintf(fp, "%d | %02d/%02d | %s | %s\n",
-        list.check, list.month, list.day, list.tasks, list.memo);
+        todo.check, todo.month, todo.day, todo.tasks, todo.memo);
     fclose(fp);
 
     printf("일정 추가 완료!\n");
     Sleep(800);
 }
 
-int printTodoNum(int month, int day, int fcount, int count, int* found, Todo* todos)
+int printTodoNum(int month, int day, int fcount, int count, int* found)
 {
     for (int i = 0; i < count; i++)
     {
@@ -472,9 +471,9 @@ int printTodoNum(int month, int day, int fcount, int count, int* found, Todo* to
     return fcount;
 }
 
-void saveTodos(const char* path, Todo* todos, int count)
+void saveTodos(int count)
 {
-    FILE* fp = fopen(path, "w");
+    FILE* fp = fopen(pathlist, "w");
     if (fp == NULL)
     {
         printf("파일 열기 실패: %s\n", path);
@@ -491,13 +490,13 @@ void saveTodos(const char* path, Todo* todos, int count)
     fclose(fp);
 }
 
-void retouchTodo(const char* path, Todo list, Todo* todos)
+void retouchTodo()
 {
     while (1)
     {
         system("cls");
 
-        int count = loadTodos(path, todos);
+        int count = loadTodos();
         int month = 0, day = 0, fcount = 0;
         int found[100];
 
@@ -516,7 +515,7 @@ void retouchTodo(const char* path, Todo list, Todo* todos)
             return;
         }
 
-        fcount = printTodoNum(month, day, fcount, count, found, todos);
+        fcount = printTodoNum(month, day, fcount, count, found);
 
         if (fcount == 0)
         {
@@ -537,31 +536,31 @@ void retouchTodo(const char* path, Todo list, Todo* todos)
         }
         else
         {
-            char todo[128];
+            char input[128];
             int idx = found[select - 1];
             printf("날짜|할일|비고 형식으로 새 입력 (예: 12/25|크리스마스|선물 준비)\n");
-            getchar(); // 입력 버퍼 비우기
-            fgets(todo, sizeof(todo), stdin);
-            todo[strcspn(todo, "\n")] = 0;
+            getchar();
+            fgets(input, sizeof(input), stdin);
+            input[strcspn(input, "\n")] = 0;
 
-            char* ptr = strtok(todo, "/");
-            if (ptr) list.month = atoi(ptr);
-
-            ptr = strtok(NULL, "|");
-            if (ptr) list.day = atoi(ptr);
+            char* ptr = strtok(input, "/");
+            if (ptr) todo.month = atoi(ptr);
 
             ptr = strtok(NULL, "|");
-            if (ptr) strcpy(list.tasks, ptr);
+            if (ptr) todo.day = atoi(ptr);
 
             ptr = strtok(NULL, "|");
-            if (ptr) strcpy(list.memo, ptr);
+            if (ptr) strcpy(todo.tasks, ptr);
 
-            todos[idx].month = list.month;
-            todos[idx].day = list.day;
-            strcpy(todos[idx].tasks, list.tasks);
-            strcpy(todos[idx].memo, list.memo);
+            ptr = strtok(NULL, "|");
+            if (ptr) strcpy(todo.memo, ptr);
 
-            saveTodos(path, todos, count);
+            todos[idx].month = todo.month;
+            todos[idx].day = todo.day;
+            strcpy(todos[idx].tasks, todo.tasks);
+            strcpy(todos[idx].memo, todo.memo);
+
+            saveTodos(count);
 
             printf("일정 수정 완료!\n");
             Sleep(800);
@@ -570,4 +569,197 @@ void retouchTodo(const char* path, Todo list, Todo* todos)
     }
 
     return;
+}
+
+// 회원목록에 id pw 추가, 개인 파일 생성
+void appendMember()
+{
+    FILE* fp = fopen("c:\\TodoList\\member.txt", "a");
+    if (!fp)
+    {
+        printf("파일 정보 추가 실패\n");
+        exit(0);
+    }
+
+    fprintf(fp, "ID:%s,PW:%s\n", id, pw);
+    fclose(fp);
+
+    makefile();
+    appendList();
+    appendFriends();
+    appendTeams();
+}
+
+void appendList()
+{
+    sprintf(pathlist, "%s\\list.txt", path);
+    FILE* userFile = fopen(pathlist, "w");
+    if (!userFile)
+    {
+        printf("개인 파일 생성 실패\n");
+        exit(0);
+    }
+    fclose(userFile);
+}
+
+void appendFriends()
+{
+    sprintf(pathfriends, "%s\\friends.txt", path);
+    FILE* userFile = fopen(pathfriends, "w");
+    if (!userFile)
+    {
+        printf("개인 파일 생성 실패\n");
+        exit(0);
+    }
+    fclose(userFile);
+    return;
+}
+
+void appendTeams()
+{
+    sprintf(pathteams, "%s\\teams.txt", path);
+    FILE* userFile = fopen(pathteams, "w");
+    if (!userFile)
+    {
+        printf("개인 파일 생성 실패\n");
+        exit(0);
+    }
+    fclose(userFile);
+    return;
+}
+
+void category()
+{
+    system("cls");
+    int select = 0;
+    printf("----------카테고리 관리 메뉴---------\n");
+    printf("[1] 카테고리 추가\n");
+    printf("[2] 카테고리 수정\n");
+    printf("[3] 카테고리 삭제\n");
+    printf("-----------------------\n");
+    printf("[0] 뒤로 가기\n");
+    printf("입력: ");
+    scanf("%d", &select);
+
+    categoryConnect(select);
+    return;
+}
+
+void categoryConnect(int select)
+{
+    switch (select)
+    {
+    case 0:
+        login(1);
+        break;
+
+    case 1:
+        category();
+        break;
+
+    case 2:
+        friends();
+        break;
+
+    case 3:
+        teams();
+        break;
+
+    case 4:
+        exit(0);
+
+    default:
+        printf("잘못 입력하였습니다.\n");
+        Sleep(1000);
+        break;
+    }
+}
+
+void friends()
+{
+    system("cls");
+    int select = 0;
+    printf("----------친구 관리 메뉴---------\n");
+    printf("[1] 친구 추가\n");
+    printf("[2] 친구 삭제\n");
+    printf("-----------------------\n");
+    printf("[0] 뒤로 가기\n");
+    printf("입력: ");
+    scanf("%d", &select);
+    return;
+}
+
+void friendsConnect(int select)
+{
+    switch (select)
+    {
+    case 0:
+        login(1);
+        break;
+
+    case 1:
+        category();
+        break;
+
+    case 2:
+        friends();
+        break;
+
+    case 3:
+        teams();
+        break;
+
+    case 4:
+        exit(0);
+
+    default:
+        printf("잘못 입력하였습니다.\n");
+        Sleep(1000);
+        break;
+    }
+}
+
+void teams()
+{
+    system("cls");
+    int select = 0;
+    printf("----------팀 관리 메뉴---------\n");
+    printf("[1] 팀 추가\n");
+    printf("[2] 팀 수정\n");
+    printf("[3] 팀 삭제\n");
+    printf("-----------------------\n");
+    printf("[0] 로그아웃\n");
+    printf("입력: ");
+    scanf("%d", &select);
+    return;
+}
+
+void teamsConnect(int select)
+{
+    switch (select)
+    {
+    case 0:
+        login(1);
+        break;
+
+    case 1:
+        category();
+        break;
+
+    case 2:
+        friends();
+        break;
+
+    case 3:
+        teams();
+        break;
+
+    case 4:
+        exit(0);
+
+    default:
+        printf("잘못 입력하였습니다.\n");
+        Sleep(1000);
+        break;
+    }
 }
