@@ -5,70 +5,9 @@
 #include <conio.h>
 #include <windows.h>
 #include <direct.h>
-
-#define MAXLOGIN 20
-#define LINE 128
-#define MAX 200
-
-char id[MAXLOGIN];
-char pw[MAXLOGIN];
-char path[LINE];
-char pathlist[LINE];
-char pathfriends[LINE];
-char pathteams[LINE];
-
-// ? 전역 변수 선언
-typedef struct todo
-{
-    int check;
-    int month;
-    int day;
-    char tasks[MAX];
-    char memo[MAX];
-} Todo;
-
-Todo list = { 0 };
-Todo todos[200] = { 0 };
-Todo todo = { 0 };
-
-// 함수 선언
-void run();
-void openfile();
-void makefile();
-
-void appendMember();
-void appendList();
-void appendFriends();
-void appendTeams();
-
-void mainUi();
-void uiConnect(int select);
-
-void print0check();
-
-void login(int sign);
-int inputLogin(const char* message);
-int signup();
-int signin();
-int sameID();
-
-void settingPath();
-
-void category();
-void friends();
-void teams();
-
-void categoryConnect(int select);
-void friendsConnect(int select);
-void teamsConnect(int select);
-
-int loadTodos();
-void saveTodos(int count);
-void appendTodo();
-void qsortTodos(int count);
-
-void retouchTodo();
-int printTodoNum(int month, int day, int fcount, int count, int* found);
+#include "struct.h"
+#include "function.h"
+#include "global_variable.h"
 
 int main()
 {
