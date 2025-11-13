@@ -4,13 +4,13 @@
 #define LINE 128
 #define MAX 200
 
-char id[MAXLOGIN];
-char pw[MAXLOGIN];
-char path[LINE];
-char pathlist[LINE];
-char pathfriends[LINE];
-char pathteams[LINE];
+extern id[MAXLOGIN];
+extern pw[MAXLOGIN];
+extern path[LINE];
+extern pathlist[LINE];
+extern pathfriends[LINE];
+extern pathteams[LINE];
 
-Todo list = { 0 };
-Todo todos[200] = { 0 };
-Todo todo = { 0 };
+extern Todo list;
+extern Todo todos[200];
+extern Todo todo;
