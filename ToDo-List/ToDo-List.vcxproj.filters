@@ -18,5 +18,37 @@
     <ClCompile Include="main.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="global_variable.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="login.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="main_ui.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="category.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="teams.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="friends.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="appendFile.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="function.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="global_variable.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="struct.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
