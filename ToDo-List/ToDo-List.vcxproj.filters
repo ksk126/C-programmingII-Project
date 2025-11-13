@@ -39,6 +39,9 @@
     <ClCompile Include="appendFile.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="save_and_load.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="function.h">

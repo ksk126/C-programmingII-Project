@@ -46,9 +46,6 @@ void categoryConnect(int select)
         teams();
         break;
 
-    case 4:
-        exit(0);
-
     default:
         printf("잘못 입력하였습니다.\n");
         Sleep(1000);

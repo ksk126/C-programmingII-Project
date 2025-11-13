@@ -134,6 +134,7 @@
     <ClCompile Include="login.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="main_ui.c" />
+    <ClCompile Include="save_and_load.c" />
     <ClCompile Include="teams.c" />
   </ItemGroup>
   <ItemGroup>
