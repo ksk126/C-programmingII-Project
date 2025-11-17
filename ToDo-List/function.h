@@ -4,9 +4,10 @@ void openfile();
 void makefile();
 
 void appendMember();
-void appendList();
-void appendFriends();
-void appendTeams();
+void appendListFile();
+void appendCategoryFile();
+void appendFriendsFile();
+void appendTeamsFile();
 
 void mainUi();
 void uiConnect(int select);
@@ -36,3 +37,6 @@ void qsortTodos(int count);
 
 void retouchTodo();
 int printTodoNum(int month, int day, int fcount, int count, int* found);
+
+void inputCategoryName();
+void appendCategory();

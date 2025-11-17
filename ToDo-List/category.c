@@ -35,15 +35,15 @@ void categoryConnect(int select)
         break;
 
     case 1:
-        category();
+        inputCategoryName();
         break;
 
     case 2:
-        friends();
+        //retouchCategory();
         break;
 
     case 3:
-        teams();
+        //removeCategory();
         break;
 
     default:
@@ -51,4 +51,14 @@ void categoryConnect(int select)
         Sleep(1000);
         break;
     }
+}
+
+void inputCategoryName()
+{
+    printf("추가할 카테고리 이름: ");
+    scanf("%s", categoryName);
+    
+    appendCategory();
+
+    return;
 }

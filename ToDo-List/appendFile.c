@@ -41,12 +41,13 @@ void appendMember()
     fclose(fp);
 
     makefile();
-    appendList();
-    appendFriends();
-    appendTeams();
+    appendListFile();
+    appendCategoryFile();
+    appendFriendsFile();
+    appendTeamsFile();
 }
 
-void appendList()
+void appendListFile()
 {
     sprintf(pathlist, "%s\\list.txt", path);
     FILE* userFile = fopen(pathlist, "w");
@@ -58,7 +59,22 @@ void appendList()
     fclose(userFile);
 }
 
-void appendFriends()
+void appendCategoryFile()
+{
+    sprintf(pathcategory, "%s\\category", path);
+    _mkdir(pathcategory);
+    sprintf(pathcategoryList, "%s\\category.txt", path);
+    FILE* userFile = fopen(pathcategoryList, "w");
+    if (!userFile)
+    {
+        printf("개인 파일 생성 실패");
+        exit(0);
+    }
+    fclose(userFile);
+    return;
+}
+
+void appendFriendsFile()
 {
     sprintf(pathfriends, "%s\\friends.txt", path);
     FILE* userFile = fopen(pathfriends, "w");
@@ -71,7 +87,7 @@ void appendFriends()
     return;
 }
 
-void appendTeams()
+void appendTeamsFile()
 {
     sprintf(pathteams, "%s\\teams.txt", path);
     FILE* userFile = fopen(pathteams, "w");
@@ -81,5 +97,19 @@ void appendTeams()
         exit(0);
     }
     fclose(userFile);
+    return;
+}
+
+void appendCategory()
+{
+    FILE* fp = fopen(pathcategoryList, "a");
+    if (!fp)
+    {
+        printf("파일 정보 추가 실패\n");
+        exit(0);
+    }
+
+    fprintf(fp, "%s\n", categoryName);
+    fclose(fp);
     return;
 }

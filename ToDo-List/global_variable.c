@@ -10,6 +10,9 @@ char path[LINE];
 char pathlist[LINE];
 char pathfriends[LINE];
 char pathteams[LINE];
+char pathcategory[LINE];
+char pathcategoryList[LINE];
+char categoryName[LINE];
 
 Todo list = { 0 };
 Todo todos[200] = { 0 };

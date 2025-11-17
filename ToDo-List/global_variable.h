@@ -10,6 +10,9 @@ extern path[LINE];
 extern pathlist[LINE];
 extern pathfriends[LINE];
 extern pathteams[LINE];
+extern pathcategory[LINE];
+extern pathcategoryList[LINE];
+extern categoryName[LINE];
 
 extern Todo list;
 extern Todo todos[200];
