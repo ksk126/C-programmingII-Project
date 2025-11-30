@@ -12,6 +12,7 @@ char pathfriends[LINE];
 char pathteams[LINE];
 char pathcategory[LINE];
 char pathcategoryList[LINE];
+char pathcategoryfile[LINE];
 char categoryName[LINE];
 
 Todo list = { 0 };

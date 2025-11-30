@@ -31,9 +31,21 @@ void run()
 void settingPath()
 {
     sprintf(path, "c:\\TodoList\\%s", id);
+    sprintf(pathlist, "%s\\list.txt", path);
+    sprintf(pathcategory, "%s\\category", path);
+    sprintf(pathcategoryList, "%s\\category.txt", path);
+    sprintf(pathfriends, "%s\\friends.txt", path);
+    sprintf(pathteams, "%s\\teams.txt", path);
+
+    return;
 }
 
-// 파일 목록 구조체 배열로 불러오기
+void settingCategoryPath()
+{
+    sprintf(pathcategoryfile, "%s\\%s", pathcategory, categoryName);
+
+    return;
+}
 
 
 // 미완료 목록만 출력

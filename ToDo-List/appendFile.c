@@ -49,7 +49,6 @@ void appendMember()
 
 void appendListFile()
 {
-    sprintf(pathlist, "%s\\list.txt", path);
     FILE* userFile = fopen(pathlist, "w");
     if (!userFile)
     {
@@ -61,13 +60,11 @@ void appendListFile()
 
 void appendCategoryFile()
 {
-    sprintf(pathcategory, "%s\\category", path);
     _mkdir(pathcategory);
-    sprintf(pathcategoryList, "%s\\category.txt", path);
     FILE* userFile = fopen(pathcategoryList, "w");
     if (!userFile)
     {
-        printf("개인 파일 생성 실패");
+        printf("개인 파일 생성 실패\n");
         exit(0);
     }
     fclose(userFile);
@@ -76,7 +73,6 @@ void appendCategoryFile()
 
 void appendFriendsFile()
 {
-    sprintf(pathfriends, "%s\\friends.txt", path);
     FILE* userFile = fopen(pathfriends, "w");
     if (!userFile)
     {
@@ -89,7 +85,6 @@ void appendFriendsFile()
 
 void appendTeamsFile()
 {
-    sprintf(pathteams, "%s\\teams.txt", path);
     FILE* userFile = fopen(pathteams, "w");
     if (!userFile)
     {
@@ -111,5 +106,15 @@ void appendCategory()
 
     fprintf(fp, "%s\n", categoryName);
     fclose(fp);
+
+    appendCategoryListFile();
+
     return;
+}
+
+void appendCategoryListFile()
+{
+    settingCategoryPath();
+
+    _mkdir(pathcategoryfile);
 }

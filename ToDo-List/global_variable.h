@@ -4,15 +4,16 @@
 #define LINE 128
 #define MAX 200
 
-extern id[MAXLOGIN];
-extern pw[MAXLOGIN];
-extern path[LINE];
-extern pathlist[LINE];
-extern pathfriends[LINE];
-extern pathteams[LINE];
-extern pathcategory[LINE];
-extern pathcategoryList[LINE];
-extern categoryName[LINE];
+extern char id[MAXLOGIN];
+extern char pw[MAXLOGIN];
+extern char path[LINE];
+extern char pathlist[LINE];
+extern char pathfriends[LINE];
+extern char pathteams[LINE];
+extern char pathcategory[LINE];
+extern char pathcategoryList[LINE];
+extern char pathcategoryfile[LINE];
+extern char categoryName[LINE];
 
 extern Todo list;
 extern Todo todos[200];

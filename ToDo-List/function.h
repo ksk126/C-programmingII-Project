@@ -21,6 +21,7 @@ int signin();
 int sameID();
 
 void settingPath();
+void settingCategoryPath();
 
 void category();
 void friends();
@@ -40,3 +41,4 @@ int printTodoNum(int month, int day, int fcount, int count, int* found);
 
 void inputCategoryName();
 void appendCategory();
+void appendCategoryListFile();
