@@ -42,3 +42,17 @@ int printTodoNum(int month, int day, int fcount, int count, int* found);
 void inputCategoryName();
 void appendCategory();
 void appendCategoryListFile();
+
+void retouchCategory();
+void removeCategory();
+
+void appendfriend();
+void removefriend();
+
+void inputTeamName();
+void retouchTeam();
+void removeTeam();
+void loadTeamTasks(const char* userId);
+void selectTeamForTask(int mode);
+void appendTeamTask(const char* teamName);
+void removeTeamTask(const char* teamName);

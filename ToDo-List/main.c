@@ -28,16 +28,33 @@ void run()
 }
 
 // 회원에 따른 파일 경로 설정
+// settingPath() ? call after id is set (signin/signup)
 void settingPath()
 {
-    sprintf(path, "c:\\TodoList\\%s", id);
-    sprintf(pathlist, "%s\\list.txt", path);
-    sprintf(pathcategory, "%s\\category", path);
-    sprintf(pathcategoryList, "%s\\category.txt", path);
-    sprintf(pathfriends, "%s\\friends.txt", path);
-    sprintf(pathteams, "%s\\teams.txt", path);
+    sprintf(path, "C:\\TodoList\\%s", id);
 
-    return;
+    // Per-user files/folders
+    sprintf(pathlist, "%s\\list.txt", path);
+    sprintf(pathfriends, "%s\\friends.txt", path);
+    sprintf(pathcategory, "%s\\category", path);
+    sprintf(pathcategoryList, "%s\\category\\category.txt", path);
+    sprintf(pathteamsFile, "%s\\teams.txt", path);
+
+    // Shared team tasks dir
+    sprintf(pathteamsDir, "C:\\TodoList\\teams");
+
+    // Ensure base folders exist
+    _mkdir("C:\\TodoList");
+    _mkdir(path);
+    _mkdir(pathcategory);
+    _mkdir(pathteamsDir);
+
+    // Ensure files exist
+    FILE* f;
+    f = fopen(pathlist, "a"); if (f) fclose(f);
+    f = fopen(pathfriends, "a"); if (f) fclose(f);
+    f = fopen(pathcategoryList, "a"); if (f) fclose(f);
+    f = fopen(pathteamsFile, "a"); if (f) fclose(f);
 }
 
 void settingCategoryPath()

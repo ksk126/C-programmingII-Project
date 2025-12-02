@@ -14,6 +14,8 @@ extern char pathcategory[LINE];
 extern char pathcategoryList[LINE];
 extern char pathcategoryfile[LINE];
 extern char categoryName[LINE];
+extern char pathteamsFile[LINE];
+extern char pathteamsDir[LINE];
 
 extern Todo list;
 extern Todo todos[200];

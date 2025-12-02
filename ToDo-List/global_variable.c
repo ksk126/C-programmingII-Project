@@ -14,6 +14,8 @@ char pathcategory[LINE];
 char pathcategoryList[LINE];
 char pathcategoryfile[LINE];
 char categoryName[LINE];
+char pathteamsFile[LINE];
+char pathteamsDir[LINE];
 
 Todo list = { 0 };
 Todo todos[200] = { 0 };
