@@ -8,27 +8,64 @@
 #include "function.h"
 #include "global_variable.h"
 
-static void writeTeamLineToUser(const char* userId, const char* teamName, const char* membersCSV)
+// 팀 요약 출력 (상단에 팀별 할일 목록)
+void printTeamSummary()
 {
-    char userTeamsPath[256];
-    sprintf(userTeamsPath, "C:\\TodoList\\%s\\teams.txt", userId);
+    FILE* fp = fopen(pathteamsFile, "r");
+    printf("------ 팀별 할일 목록 ------\n");
+    if (!fp) { printf("(팀 없음)\n"); return; }
 
-    // Ensure user folder exists (in case of friend who hasn't logged yet)
-    char userFolder[256];
-    sprintf(userFolder, "C:\\TodoList\\%s", userId);
-    _mkdir(userFolder);
+    char line[128];
+    int anyTeam = 0;
+    while (fgets(line, sizeof(line), fp)) {
+        line[strcspn(line, "\n")] = 0;
+        if (line[0] == '\0') continue;
+        anyTeam = 1;
 
-    FILE* fp = fopen(userTeamsPath, "a");
-    if (!fp) { printf("[경고] '%s'의 teams.txt 열기 실패\n", userId); return; }
-    fprintf(fp, "%s(%s)\n", teamName, membersCSV);
+        char teamName[64];
+        char* openParen = strchr(line, '(');
+        if (openParen) {
+            strncpy(teamName, line, openParen - line);
+            teamName[openParen - line] = '\0';
+        }
+        else {
+            strcpy(teamName, line);
+        }
+
+        printf("[%s]\n", teamName);
+
+        char teamListPath[256];
+        sprintf(teamListPath, "%s\\%s\\list.txt", pathteamsDir, teamName);
+        FILE* tf = fopen(teamListPath, "r");
+        if (!tf) { printf("(할일 없음)\n"); continue; }
+
+        char taskLine[128];
+        int printed = 0;
+        while (fgets(taskLine, sizeof(taskLine), tf)) {
+            taskLine[strcspn(taskLine, "\n")] = 0;
+            if (taskLine[0] != '\0') {
+                printf("- %s\n", taskLine);
+                printed = 1;
+            }
+        }
+        fclose(tf);
+
+        if (!printed) printf("(할일 없음)\n");
+    }
     fclose(fp);
+
+    if (!anyTeam) printf("(등록된 팀 없음)\n");
+    printf("----------------------------------\n");
 }
 
+// 팀 메뉴
 void teams()
 {
     int select = -1;
     while (select != 0) {
         system("cls");
+        printTeamSummary();   // 상단 요약 출력
+
         printf("----------팀 관리 메뉴---------\n");
         printf("[1] 팀 추가\n");
         printf("[2] 팀 수정 (이름)\n");
@@ -42,6 +79,7 @@ void teams()
     }
 }
 
+// 메뉴 연결
 void teamsConnect(int select)
 {
     switch (select)
@@ -56,13 +94,14 @@ void teamsConnect(int select)
     }
 }
 
+// 팀 추가
 void inputTeamName()
 {
     char teamName[64];
     printf("추가할 팀 이름: ");
     scanf("%63s", teamName);
 
-    // Load friends for selection
+    // 친구 목록 불러오기
     FILE* fp = fopen(pathfriends, "r");
     if (!fp) { printf("친구 목록 파일 열기 실패\n"); Sleep(1000); return; }
 
@@ -79,7 +118,7 @@ void inputTeamName()
     printf("------ 친구 목록 ------\n");
     for (int i = 0; i < count; i++) printf("[%d] %s\n", i + 1, friendsList[i]);
 
-    // Select members
+    // 팀원 선택
     char teamMembersCSV[256] = "";
     int select;
     printf("팀원 선택 (0 입력 시 종료):\n");
@@ -89,7 +128,6 @@ void inputTeamName()
         if (select == 0) break;
         if (select < 1 || select > count) { printf("잘못된 선택입니다.\n"); continue; }
 
-        // Avoid duplicates in CSV (optional simple check)
         if (strstr(teamMembersCSV, friendsList[select - 1]) == NULL) {
             if (strlen(teamMembersCSV) > 0) strcat(teamMembersCSV, ",");
             strcat(teamMembersCSV, friendsList[select - 1]);
@@ -100,59 +138,30 @@ void inputTeamName()
         printf("팀원이 선택되지 않았습니다.\n"); Sleep(1000); return;
     }
 
-    // Write to creator's teams.txt
+    // 내 teams.txt에 기록
     FILE* myTeams = fopen(pathteamsFile, "a");
     if (!myTeams) { printf("내 teams.txt 열기 실패\n"); Sleep(1000); return; }
     fprintf(myTeams, "%s(%s)\n", teamName, teamMembersCSV);
     fclose(myTeams);
 
-    // Also write the same team line to each selected member’s teams.txt
-    // so they see the team on login
-    {
-        // Also include the creator in the CSV for consistency if desired
-        char membersWithCreator[256];
-        if (strstr(teamMembersCSV, id) == NULL) {
-            sprintf(membersWithCreator, "%s,%s", id, teamMembersCSV);
-        }
-        else {
-            strcpy(membersWithCreator, teamMembersCSV);
-        }
+    // 팀 폴더 생성
+    _mkdir(pathteamsDir);
+    char teamPath[256];
+    sprintf(teamPath, "%s\\%s", pathteamsDir, teamName);
+    _mkdir(teamPath);
 
-        // Write line to creator (ensured above) and to each friend
-        for (int i = 0; i < count; i++) {
-            // If friend is in selected CSV, append to their teams.txt
-            char needle[80];
-            sprintf(needle, "%s", friendsList[i]);
-            // naive contains check: exact token match would be ideal; this is simple
-            char tmp[256]; strcpy(tmp, membersWithCreator);
-            char* tok = strtok(tmp, ",");
-            while (tok) {
-                if (strcmp(tok, friendsList[i]) == 0) {
-                    writeTeamLineToUser(friendsList[i], teamName, membersWithCreator);
-                    break;
-                }
-                tok = strtok(NULL, ",");
-            }
-        }
-        // Ensure shared team folder exists and create list.txt
-        _mkdir(pathteamsDir);
-        char teamPath[256];
-        sprintf(teamPath, "%s\\%s", pathteamsDir, teamName);
-        _mkdir(teamPath);
-
-        char teamListPath[256];
-        sprintf(teamListPath, "%s\\list.txt", teamPath);
-        FILE* teamFile = fopen(teamListPath, "a");
-        if (teamFile) fclose(teamFile);
-    }
+    char teamListPath[256];
+    sprintf(teamListPath, "%s\\list.txt", teamPath);
+    FILE* teamFile = fopen(teamListPath, "a");
+    if (teamFile) fclose(teamFile);
 
     printf("팀 '%s' 추가 완료!\n", teamName);
     Sleep(1000);
 }
 
+// 팀 수정
 void retouchTeam()
 {
-    // Read current user's teams.txt
     FILE* fp = fopen(pathteamsFile, "r");
     if (!fp) { printf("팀 목록 파일 열기 실패\n"); Sleep(1000); return; }
 
@@ -179,21 +188,16 @@ void retouchTeam()
     char newName[64];
     printf("새 팀 이름: "); scanf("%63s", newName);
 
-    // Extract old team name and members
-    char oldName[64], members[128] = "";
+    char oldName[64];
     char* openParen = strchr(oldTeamLine, '(');
-    char* closeParen = strchr(oldTeamLine, ')');
-    if (openParen && closeParen) {
+    if (openParen) {
         strncpy(oldName, oldTeamLine, openParen - oldTeamLine);
         oldName[openParen - oldTeamLine] = '\0';
-        strncpy(members, openParen + 1, closeParen - openParen - 1);
-        members[closeParen - openParen - 1] = '\0';
     }
     else {
         strcpy(oldName, oldTeamLine);
     }
 
-    // Rename shared team folder
     char oldPath[256], newPath[256];
     sprintf(oldPath, "%s\\%s", pathteamsDir, oldName);
     sprintf(newPath, "%s\\%s", pathteamsDir, newName);
@@ -201,11 +205,10 @@ void retouchTeam()
         printf("팀 폴더 이름 변경 완료\n");
     }
     else {
-        printf("팀 폴더 이름 변경 실패 (폴더가 없거나 권한 문제)\n");
+        printf("팀 폴더 이름 변경 실패\n");
     }
 
-    // Update current user's teams.txt
-    sprintf(lines[select - 1], "%s(%s)", newName, members);
+    sprintf(lines[select - 1], "%s", newName);
     fp = fopen(pathteamsFile, "w");
     if (!fp) { printf("팀 목록 갱신 실패\n"); Sleep(1000); return; }
     for (int i = 0; i < count; i++) fprintf(fp, "%s\n", lines[i]);
@@ -215,6 +218,7 @@ void retouchTeam()
     Sleep(1000);
 }
 
+// 팀 삭제
 void removeTeam()
 {
     FILE* fp = fopen(pathteamsFile, "r");
@@ -229,16 +233,25 @@ void removeTeam()
     }
     fclose(fp);
 
-    if (count == 0) { printf("삭제할 팀이 없습니다.\n"); Sleep(1000); return; }
+    if (count == 0) {
+        printf("삭제할 팀이 없습니다.\n");
+        Sleep(1000);
+        return;
+    }
 
     printf("삭제할 팀 목록:\n");
     for (int i = 0; i < count; i++) printf("[%d] %s\n", i + 1, lines[i]);
 
     int select;
-    printf("번호 선택: "); if (scanf("%d", &select) != 1) { fflush(stdin); return; }
-    if (select < 1 || select > count) { printf("잘못된 선택입니다.\n"); Sleep(1000); return; }
+    printf("번호 선택: ");
+    if (scanf("%d", &select) != 1) { fflush(stdin); return; }
+    if (select < 1 || select > count) {
+        printf("잘못된 선택입니다.\n");
+        Sleep(1000);
+        return;
+    }
 
-    // Extract team name
+    // 팀 이름 추출
     char teamName[64];
     char* openParen = strchr(lines[select - 1], '(');
     if (openParen) {
@@ -249,25 +262,35 @@ void removeTeam()
         strcpy(teamName, lines[select - 1]);
     }
 
-    // Delete shared team folder (only if empty)
-    char folderPath[256];
-    sprintf(folderPath, "%s\\%s", pathteamsDir, teamName);
-    if (_rmdir(folderPath) == 0) {
-        printf("팀 폴더 삭제 완료\n");
-    }
-    else {
-        printf("팀 폴더 삭제 실패 (비어있지 않거나 권한 문제)\n");
-    }
-
-    // Remove from current user's teams.txt
+    // 현재 사용자 teams.txt에서 제거
     fp = fopen(pathteamsFile, "w");
-    if (!fp) { printf("팀 목록 갱신 실패\n"); Sleep(1000); return; }
+    if (!fp) {
+        printf("팀 목록 갱신 실패\n");
+        Sleep(1000);
+        return;
+    }
     for (int i = 0; i < count; i++) {
         if (i != select - 1) fprintf(fp, "%s\n", lines[i]);
     }
     fclose(fp);
+    printf("팀 목록에서 '%s' 제거 완료.\n", teamName);
 
-    printf("팀 삭제 완료!\n");
+    // 공유 팀 폴더 파일 삭제 후 폴더 삭제
+    char teamPath[256];
+    sprintf(teamPath, "%s\\%s", pathteamsDir, teamName);
+
+    char teamListPath[256];
+    sprintf(teamListPath, "%s\\list.txt", teamPath);
+
+    DeleteFileA(teamListPath); // list.txt 삭제
+
+    if (_rmdir(teamPath) == 0) {
+        printf("팀 폴더 삭제 완료.\n");
+    }
+    else {
+        printf("팀 폴더 삭제 실패 (파일이 남아있거나 권한 문제일 수 있음): %s\n", teamPath);
+    }
+
     Sleep(1000);
 }
 
@@ -291,10 +314,15 @@ void selectTeamForTask(int mode)
     for (int i = 0; i < count; i++) printf("[%d] %s\n", i + 1, teams[i]);
 
     int select;
-    printf("번호 선택: "); if (scanf("%d", &select) != 1) { fflush(stdin); return; }
-    if (select < 1 || select > count) { printf("잘못된 선택입니다.\n"); Sleep(1000); return; }
+    printf("번호 선택: ");
+    if (scanf("%d", &select) != 1) { fflush(stdin); return; }
+    if (select < 1 || select > count) {
+        printf("잘못된 선택입니다.\n");
+        Sleep(1000);
+        return;
+    }
 
-    // Extract team name
+    // 팀 이름 추출
     char teamName[64];
     char* openParen = strchr(teams[select - 1], '(');
     if (openParen) {
@@ -353,8 +381,13 @@ void removeTeamTask(const char* teamName)
     for (int i = 0; i < count; i++) printf("[%d] %s\n", i + 1, tasks[i]);
 
     int select;
-    printf("삭제할 번호 선택: "); if (scanf("%d", &select) != 1) { fflush(stdin); return; }
-    if (select < 1 || select > count) { printf("잘못된 선택입니다.\n"); Sleep(1000); return; }
+    printf("삭제할 번호 선택: ");
+    if (scanf("%d", &select) != 1) { fflush(stdin); return; }
+    if (select < 1 || select > count) {
+        printf("잘못된 선택입니다.\n");
+        Sleep(1000);
+        return;
+    }
 
     fp = fopen(teamListPath, "w");
     if (!fp) { printf("팀 할일 파일 쓰기 실패\n"); Sleep(1000); return; }
@@ -369,7 +402,6 @@ void removeTeamTask(const char* teamName)
 
 void loadTeamTasks(const char* userId)
 {
-    // Read only current user's teams.txt to discover team memberships
     FILE* fp = fopen(pathteamsFile, "r");
     if (!fp) return;
 
@@ -388,7 +420,6 @@ void loadTeamTasks(const char* userId)
         strncpy(members, openParen + 1, closeParen - openParen - 1);
         members[closeParen - openParen - 1] = '\0';
 
-        // Check membership
         char tmp[256]; strcpy(tmp, members);
         char* tok = strtok(tmp, ",");
         while (tok) {

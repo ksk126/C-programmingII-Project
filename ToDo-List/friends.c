@@ -13,6 +13,8 @@ void friends()
 {
     system("cls");
     int select = 0;
+    printFriendSummary();
+
     printf("----------模备 包府 皋春---------\n");
     printf("[1] 模备 眠啊\n");
     printf("[2] 模备 昏力\n");
@@ -161,4 +163,29 @@ void removefriend()
 
     printf("\n'%s' 模备 昏力 肯丰.\n", targetId);
     Sleep(1000);
+}
+
+void printFriendSummary()
+{
+    FILE* fp = fopen(pathfriends, "r");
+    if (!fp) { printf("模备 绝澜\n"); return; }
+
+    char friendsList[100][64];
+    int count = 0;
+    while (fscanf(fp, "%s", friendsList[count]) != EOF) {
+        count++;
+        if (count >= 100) break;
+    }
+    fclose(fp);
+
+    printf("------ 模备 格废 ------\n");
+    if (count == 0) printf("(模备 绝澜)\n");
+    else {
+        for (int i = 0; i < count; i++) {
+            printf("- %s\n", friendsList[i]);
+        }
+    }
+    printf("-----------------------\n");
+
+    return;
 }

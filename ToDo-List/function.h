@@ -42,6 +42,12 @@ int printTodoNum(int month, int day, int fcount, int count, int* found);
 void inputCategoryName();
 void appendCategory();
 void appendCategoryListFile();
+void appendTodoInCategory();
+int printTodoNumInCategory(int month, int day, int fcount, int count, int* found);
+void retouchTodoInCategory();
+void saveTodosToCategory(int count);
+int loadTodosToCategory();
+void printCategorySummary();
 
 void retouchCategory();
 void removeCategory();
@@ -56,3 +62,6 @@ void loadTeamTasks(const char* userId);
 void selectTeamForTask(int mode);
 void appendTeamTask(const char* teamName);
 void removeTeamTask(const char* teamName);
+void printTeamSummary();
+
+void printFriendSummary();
