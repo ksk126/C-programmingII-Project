@@ -15,13 +15,21 @@
 void friends() {
     clearScreen();
     int select = 0;
+    int width = 30;
     printFriendSummary();
 
-    printf("----------친구 관리 메뉴---------\n");
-    printf("[1] 친구 추가\n");
-    printf("[2] 친구 삭제\n");
-    printf("-----------------------\n");
-    printf("[0] 뒤로 가기\n");
+    // 윗줄
+    TitleOnBar(width);
+
+    // 메뉴 항목들
+    printMiddleLine("카테고리 메뉴", width);
+    printMiddleLine("[1] 친구 추가", width);
+    printMiddleLine("[2] 친구 삭제", width);
+    printMiddleLine("[0] 뒤로가기", width);
+
+    // 아랫줄
+    TitleUnderBar(width);
+
     printf("입력: ");
     scanf("%d", &select);
 

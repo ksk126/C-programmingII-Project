@@ -1,70 +1,88 @@
 #pragma once
+#include "struct.h"
 
-// 실행 및 초기화
+// -----------------------------
+// main.c
+// -----------------------------
 void run();
+void settingPath();
+void settingCategoryPath();
+
+// -----------------------------
+// login.c
+// -----------------------------
+int inputLogin(const char* message);
+void login(int sign);
+int signup();
+int signin();
+int sameID();
+
+// -----------------------------
+// ui.c
+// -----------------------------
+void mainUi();
+void uiConnect(int select);
+void categoryConnect(int select);
+void friendsConnect(int select);
+void teamsConnect(int select);
+void TitleOnBar(int width);
+void printMiddleLine(const char* text, int width);
+void TitleUnderBar(int width);
+void gotoxy(int x, int y);
+
+// -----------------------------
+// file_manager.c
+// -----------------------------
 void openfile();
 void makefile();
-
-// 파일 관리
 void appendMember();
 void appendListFile();
 void appendCategoryFile();
 void appendFriendsFile();
 void appendTeamsFile();
-
-// UI
-void mainUi();
-void uiConnect(int select);
-
-// 로그인
-void login(int sign);
-int inputLogin(const char* message);
-int signup();
-int signin();
-int sameID();
-
-// 경로 설정
-void settingPath();
-void settingCategoryPath();
-
-// 카테고리
-void category();
-void categoryConnect(int select);
-void inputCategoryName();
 void appendCategory();
 void appendCategoryListFile();
-void appendTodoInCategory();
-int printTodoNumInCategory(int month, int day, int fcount, int count, int* found);
-void retouchTodoInCategory();
-void saveTodosToCategory(int count);
-int loadTodosToCategory();
-void printCategorySummary();
-void retouchCategory();
-void removeCategory();
 
-// 친구
-void friends();
-void friendsConnect(int select);
-void appendfriend();
-void removefriend();
-void printFriendSummary();
-
-// 팀
-void teams();
-void teamsConnect(int select);
-void inputTeamName();
-void retouchTeam();
-void removeTeam();
-void loadTeamTasks(const char* userId);
-void selectTeamForTask(int mode);
-void appendTeamTask(const char* teamName);
-void removeTeamTask(const char* teamName);
-void printTeamSummary();
-
-// 일정 관리
+// -----------------------------
+// todo.c (개인 일정)
+// -----------------------------
 int loadTodos();
 void saveTodos(int count);
 void appendTodo();
 void qsortTodos(int count);
-void retouchTodo();
 int printTodoNum(int month, int day, int fcount, int count, int* found);
+void retouchTodo();
+void completeTodo();
+
+// -----------------------------
+// category.c (카테고리 일정)
+// -----------------------------
+void inputCategoryName();
+void retouchCategory();
+void removeCategory();
+void appendTodoInCategory();
+void retouchTodoInCategory();
+int loadTodosToCategory();
+void saveTodosToCategory(int count);
+int printTodoNumInCategory(int month, int day, int fcount, int count, int* found);
+void completeTodoInCategory();
+void printCategorySummary();
+
+// -----------------------------
+// friends.c
+// -----------------------------
+void appendfriend();
+void removefriend();
+void printFriendSummary();
+
+// -----------------------------
+// teams.c (팀 일정)
+// -----------------------------
+void inputTeamName();
+void retouchTeam();
+void removeTeam();
+void selectTeamForTask(int mode);
+void completeTeamTask(const char* teamName);
+void appendTeamTask(const char* teamName);
+void removeTeamTask(const char* teamName);
+void printTeamSummary(const char* teamName);

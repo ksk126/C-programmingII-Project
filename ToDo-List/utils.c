@@ -13,7 +13,10 @@ void clearScreen() {
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     DWORD dwConSize;
 
-    if (!GetConsoleScreenBufferInfo(hConsole, &csbi)) return;
+    if (!GetConsoleScreenBufferInfo(hConsole, &csbi))
+    {
+        return;
+    }
     dwConSize = csbi.dwSize.X * csbi.dwSize.Y;
 
     FillConsoleOutputCharacter(hConsole, ' ', dwConSize, coordScreen, &cCharsWritten);
@@ -88,6 +91,46 @@ void extractNameBeforeParen(const char* src, char* dest) {
 // -----------------------------
 // 문자열에서 개행 제거
 // -----------------------------
-void trimNewline(char* str) {
+void trimNewline(char* str)
+{
     str[strcspn(str, "\n")] = 0;
+}
+
+// -----------------------------
+// 박스 그리기
+// -----------------------------
+void TitleOnBar(int width)
+{
+    int i;
+
+    // 윗줄
+    printf("┌");
+    for (i = 0; i < width; i++) printf("─");
+    printf("┐\n");
+}
+
+void printMiddleLine(const char* text, int width)
+{
+    printf("│%-*s│\n", width, text);
+}
+
+void TitleUnderBar(int width)
+{
+    int i;
+
+    // 아랫줄
+    printf("└");
+    for (i = 0; i < width; i++) printf("─");
+    printf("┘\n");
+}
+
+// ------------------------------
+// 커서 이동 제어
+// ------------------------------
+void gotoxy(int x, int y)
+{
+    //x, y 좌표 설정
+    COORD pos = { x,y };
+    //커서 이동
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }

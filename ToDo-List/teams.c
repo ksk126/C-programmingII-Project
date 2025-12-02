@@ -63,18 +63,27 @@ void printTeamSummary() {
 // 팀 메뉴
 // -----------------------------
 void teams() {
+    int width = 30;
     int select = -1;
     while (select != 0) {
         clearScreen();
         printTeamSummary();
 
-        printf("----------팀 관리 메뉴---------\n");
-        printf("[1] 팀 추가\n");
-        printf("[2] 팀 수정 (이름)\n");
-        printf("[3] 팀 삭제\n");
-        printf("[4] 팀 할일 추가\n");
-        printf("[5] 팀 할일 삭제\n");
-        printf("[0] 뒤로 가기\n");
+        // 윗줄
+        TitleOnBar(width);
+
+        // 메뉴 항목들
+        printMiddleLine("카테고리 관리 메뉴", width);
+        printMiddleLine("[1] 팀 추가", width);
+        printMiddleLine("[2] 팀 수정", width);
+        printMiddleLine("[3] 팀 삭제", width);
+        printMiddleLine("[4] 팀 할일 추가", width);
+        printMiddleLine("[5] 팀 할일 삭제", width);
+        printMiddleLine("[0] 뒤로가기", width);
+
+        // 아랫줄
+        TitleUnderBar(width);
+
         printf("입력: ");
         if (scanf("%d", &select) != 1) {
             fflush(stdin);
@@ -402,4 +411,54 @@ void loadTeamTasks(const char* userId) {
         }
     }
     fclose(fp);
+}
+
+// 팀 일정 완료 처리
+void completeTeamTask(const char* teamName) {
+    char teamListPath[256];
+    sprintf(teamListPath, "%s\\%s\\list.txt", pathteamsDir, teamName);
+
+    FILE* fp = fopen(teamListPath, "r");
+    if (!fp) {
+        printf("팀 할일 파일 열기 실패\n");
+        Sleep(1000);
+        return;
+    }
+
+    char tasks[100][128];
+    int count = 0;
+    while (fgets(tasks[count], sizeof(tasks[count]), fp)) {
+        trimNewline(tasks[count]);
+        count++;
+        if (count >= 100) break;
+    }
+    fclose(fp);
+
+    if (count == 0) {
+        printf("완료할 팀 할일이 없습니다.\n");
+        Sleep(1000);
+        return;
+    }
+
+    printList(tasks, count, "팀 할일 목록");
+    int select = selectFromList(count, "완료할 번호 선택: ");
+    if (select == -1) return;
+
+    char completedTask[128];
+    sprintf(completedTask, "[완료] %s", tasks[select - 1]);
+    strcpy(tasks[select - 1], completedTask);
+
+    fp = fopen(teamListPath, "w");
+    if (!fp) {
+        printf("팀 할일 파일 쓰기 실패\n");
+        Sleep(1000);
+        return;
+    }
+    for (int i = 0; i < count; i++) {
+        fprintf(fp, "%s\n", tasks[i]);
+    }
+    fclose(fp);
+
+    printf("팀 '%s' 할일 완료 처리 완료!\n", teamName);
+    Sleep(1000);
 }

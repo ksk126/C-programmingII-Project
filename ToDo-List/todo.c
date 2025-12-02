@@ -195,3 +195,47 @@ void retouchTodo() {
         }
     }
 }
+
+// 일정 완료 처리
+void completeTodo() {
+    clearScreen();
+
+    int count = loadTodos();
+    if (count == 0) {
+        printf("완료할 데이터가 없습니다.\n");
+        Sleep(1000);
+        return;
+    }
+
+    int month, day;
+    printf("완료할 일정 날짜 입력 (예: mm/dd, 뒤로 가려면 0): ");
+    scanf("%d/%d", &month, &day);
+    if (month == 0) return;
+
+    int found[100];
+    int fcount = printTodoNum(month, day, 0, count, found);
+
+    if (fcount == 0) {
+        printf("해당 날짜에 일정이 없습니다.\n");
+        Sleep(1000);
+        return;
+    }
+
+    int select;
+    printf("완료할 번호 선택: ");
+    scanf("%d", &select);
+
+    if (select < 1 || select > fcount) {
+        printf("잘못된 선택입니다.\n");
+        Sleep(1000);
+        return;
+    }
+
+    int idx = found[select - 1];
+    todos[idx].check = 1;
+
+    saveTodos(count);
+
+    printf("일정 완료 처리 완료!\n");
+    Sleep(800);
+}

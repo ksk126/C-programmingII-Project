@@ -15,16 +15,25 @@
 void category() {
     clearScreen();
     int select = 0;
+    int width = 30;
     printCategorySummary();
 
-    printf("----------카테고리 관리 메뉴---------\n");
-    printf("[1] 카테고리 추가\n");
-    printf("[2] 카테고리 수정\n");
-    printf("[3] 카테고리 삭제\n");
-    printf("[4] 카테고리 할일 추가\n");
-    printf("[5] 카테고리 할일 수정\n");
-    printf("-----------------------\n");
-    printf("[0] 뒤로 가기\n");
+    // 윗줄
+    TitleOnBar(width);
+
+    // 메뉴 항목들
+    printMiddleLine("카테고리 관리 메뉴", width);
+    printMiddleLine("[1] 카테고리 추가", width);
+    printMiddleLine("[2] 수정", width);
+    printMiddleLine("[3] 카테고리 삭제", width);
+    printMiddleLine("[4] 카테고리 할일 추가", width);
+    printMiddleLine("[5] 카테고리 할일 수정", width);
+    printMiddleLine("[6] 카테고리 할일 완료", width);
+    printMiddleLine("[0] 뒤로가기", width);
+
+    // 아랫줄
+    TitleUnderBar(width);
+
     printf("입력: ");
     scanf("%d", &select);
 
@@ -329,7 +338,8 @@ int loadTodosToCategory() {
 // -----------------------------
 // 카테고리별 미완료 일정 출력
 // -----------------------------
-void printCategorySummary() {
+void printCategorySummary()
+{
     char categories[100][64];
     int count = loadListFromFile(pathcategoryList, categories, 100);
 
@@ -363,4 +373,47 @@ void printCategorySummary() {
         }
     }
     printf("----------------------------------\n");
+}
+
+// 카테고리 일정 완료 처리
+void completeTodoInCategory() {
+    clearScreen();
+
+    int count = loadTodosToCategory();
+    if (count == 0) {
+        printf("완료할 데이터가 없습니다.\n");
+        Sleep(1000);
+        return;
+    }
+
+    int month, day;
+    printf("완료할 일정 날짜 입력 (예: mm/dd, 뒤로 가려면 0): ");
+    scanf("%d/%d", &month, &day);
+    if (month == 0) return;
+
+    int found[100];
+    int fcount = printTodoNumInCategory(month, day, 0, count, found);
+
+    if (fcount == 0) {
+        printf("해당 날짜에 일정이 없습니다.\n");
+        Sleep(1000);
+        return;
+    }
+
+    int select;
+    printf("완료할 번호 선택: ");
+    scanf("%d", &select);
+
+    if (select < 1 || select > fcount) {
+        printf("잘못된 선택입니다.\n");
+        Sleep(1000);
+        return;
+    }
+
+    int idx = found[select - 1];
+    todos[idx].check = 1;
+    saveTodosToCategory(count);
+
+    printf("카테고리 일정 완료 처리 완료!\n");
+    Sleep(800);
 }

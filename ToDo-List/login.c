@@ -14,9 +14,19 @@
 // 로그인 입력 처리
 // -----------------------------
 int inputLogin(const char* message) {
-    printf("%s", message);
-    printf("ID: ");
+    int width = 45;
+    TitleOnBar(45);
+    printMiddleLine(message, width);
+    printMiddleLine("", width);
+    printMiddleLine("ID: ", width);
+    printMiddleLine("PW: ", width);
+    printMiddleLine("", width);
+    TitleUnderBar(45);
+
+    gotoxy(5, 3);
     scanf("%s", id);
+    gotoxy(5, 4);
+    scanf("%s", pw);
 
     if (!strcmp(id, "0")) {
         exit(0);
@@ -24,9 +34,6 @@ int inputLogin(const char* message) {
     else if (!strcmp(id, "1")) {
         return 1;
     }
-
-    printf("PW: ");
-    scanf("%s", pw);
     return 0;
 }
 
@@ -35,7 +42,9 @@ int inputLogin(const char* message) {
 // -----------------------------
 void login(int sign) {
     FILE* fp = fopen("C:\\TodoList\\member.txt", "r");
-    if (!fp) {
+    if (!fp)
+    {
+        gotoxy(0, 8);
         printf("회원 목록을 확인할 수 없습니다.\n");
         exit(0);
     }
@@ -51,25 +60,33 @@ void login(int sign) {
     while (1) {
         clearScreen();
 
-        if (sign == 0) {
-            if (signup()) {
+        if (sign == 0)
+        {
+            if (signup())
+            {
                 sign = 1;
                 continue;
             }
-            else {
+            else
+            {
+                gotoxy(0, 8);
                 printf("회원가입 실패\n");
                 Sleep(1000);
                 continue;
             }
         }
 
-        if (signin()) {
+        if (signin())
+        {
+            gotoxy(0, 8);
             printf("로그인 성공!\n");
             Sleep(800);
             settingPath();
             break;
         }
-        else {
+        else
+        {
+            gotoxy(0, 8);
             printf("로그인 실패. 회원가입 하시겠습니까? (y/n)\n");
             char select = getch();
             if (select == 'y') {
@@ -83,18 +100,20 @@ void login(int sign) {
 // 회원가입
 // -----------------------------
 int signup() {
-    int select = inputLogin("회원가입을 종료하려면 0, 로그인 하려면 1.\n");
+    int select = inputLogin("회원가입을 종료하려면 0, 로그인 하려면 1.");
 
     if (select == 1) {
         return 1;
     }
 
     if (!sameID()) {
+        gotoxy(0, 8);
         printf("이미 존재하는 아이디입니다.\n");
         Sleep(1000);
         return 0;
     }
 
+    gotoxy(0, 8);
     printf("회원가입 성공!\n");
     Sleep(800);
     settingPath();
@@ -108,6 +127,7 @@ int signup() {
 int signin() {
     FILE* fp = fopen("C:\\TodoList\\member.txt", "r");
     if (!fp) {
+        gotoxy(0, 8);
         printf("회원 정보를 확인할 수 없습니다.\n");
         return 0;
     }
@@ -116,7 +136,7 @@ int signin() {
     char fileId[MAX_ID_LEN];
     char filePw[MAX_ID_LEN];
 
-    inputLogin("로그인 (0 입력시 종료)\n");
+    inputLogin("로그인 (0 입력시 종료)");
 
     while (fgets(line, sizeof(line), fp)) {
         if (sscanf(line, "ID:%[^,],PW:%s", fileId, filePw) == 2) {

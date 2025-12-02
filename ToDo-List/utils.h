@@ -18,3 +18,12 @@ void extractNameBeforeParen(const char* src, char* dest);
 
 // 문자열에서 개행 제거
 void trimNewline(char* str);
+
+// 박스 윗줄 그리기
+void TitleOnBar(int width);
+
+// 박스 아랫줄 그리기
+void TitleUnderBar(int width);
+
+// 박스 내용 채우기
+void printMiddleLine(const char* text, int width);

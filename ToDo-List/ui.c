@@ -18,12 +18,24 @@ void mainUi() {
     int select = 0;
     printf("\n");
 
-    printf("----------메인 메뉴---------\n");
-    printf("[1] 카테고리 관리\n");
-    printf("[2] 친구 관리\n");
-    printf("[3] 팀 관리\n");
-    printf("-----------------------\n");
-    printf("[0] 로그아웃\n");
+    int width = 30; // 박스 내부 너비
+
+    // 윗줄
+    TitleOnBar(30);
+
+    // 메뉴 항목들
+    printMiddleLine("카테고리 메뉴", width);
+    printMiddleLine("[1] 카테고리 관리", width);
+    printMiddleLine("[2] 친구 관리", width);
+    printMiddleLine("[3] 팀 관리", width);
+    printMiddleLine("[4] 개인 일정 추가", width);
+    printMiddleLine("[5] 개인 일정 수정", width);
+    printMiddleLine("[6] 개인 일정 완료", width);
+    printMiddleLine("[0] 로그아웃", width);
+
+    // 아랫줄
+    TitleUnderBar(30);
+
     printf("입력: ");
     scanf("%d", &select);
 
@@ -60,7 +72,8 @@ void uiConnect(int select) {
 // 카테고리 메뉴 연결
 // -----------------------------
 void categoryConnect(int select) {
-    switch (select) {
+    switch (select)
+    {
     case 0:
         mainUi();
         break;
@@ -79,18 +92,23 @@ void categoryConnect(int select) {
     case 5:
         retouchTodoInCategory();
         break;
+    case 6:
+        completeTodoInCategory();
+        break;
     default:
         printf("잘못 입력하였습니다.\n");
         Sleep(1000);
         break;
     }
+    category();
 }
 
 // -----------------------------
 // 친구 메뉴 연결
 // -----------------------------
 void friendsConnect(int select) {
-    switch (select) {
+    switch (select)
+    {
     case 0:
         mainUi();
         break;
@@ -105,13 +123,15 @@ void friendsConnect(int select) {
         Sleep(1000);
         break;
     }
+    friends();
 }
 
 // -----------------------------
 // 팀 메뉴 연결
 // -----------------------------
 void teamsConnect(int select) {
-    switch (select) {
+    switch (select)
+    {
     case 0:
         mainUi();
         break;
@@ -130,9 +150,13 @@ void teamsConnect(int select) {
     case 5:
         selectTeamForTask(2); // 팀 할일 삭제
         break;
+    case 6:
+        selectTeamForTask(3);
+        break;
     default:
         printf("잘못 입력하였습니다.\n");
         Sleep(1000);
         break;
     }
+    teams();
 }
