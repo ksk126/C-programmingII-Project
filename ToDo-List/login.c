@@ -8,19 +8,20 @@
 #include "struct.h"
 #include "function.h"
 #include "global_variable.h"
+#include "utils.h"   // clearScreen, trimNewline 등 공통 함수 사용
 
-int inputLogin(const char* message)
-{
+// -----------------------------
+// 로그인 입력 처리
+// -----------------------------
+int inputLogin(const char* message) {
     printf("%s", message);
     printf("ID: ");
     scanf("%s", id);
 
-    if (!strcmp(id, "0"))
-    {
+    if (!strcmp(id, "0")) {
         exit(0);
     }
-    else if (!strcmp(id, "1"))
-    {
+    else if (!strcmp(id, "1")) {
         return 1;
     }
 
@@ -29,11 +30,12 @@ int inputLogin(const char* message)
     return 0;
 }
 
-void login(int sign)
-{
-    FILE* fp = fopen("c:\\TodoList\\member.txt", "r");
-    if (!fp)
-    {
+// -----------------------------
+// 로그인 루프
+// -----------------------------
+void login(int sign) {
+    FILE* fp = fopen("C:\\TodoList\\member.txt", "r");
+    if (!fp) {
         printf("회원 목록을 확인할 수 없습니다.\n");
         exit(0);
     }
@@ -42,60 +44,52 @@ void login(int sign)
     long size = ftell(fp);
     fclose(fp);
 
-    if (size == 0)
-    {
+    if (size == 0) {
         sign = 0;
     }
 
-    while (1)
-    {
-        system("cls");
+    while (1) {
+        clearScreen();
 
-        if (sign == 0)
-        {
-            if (signup())
-            {
+        if (sign == 0) {
+            if (signup()) {
                 sign = 1;
                 continue;
             }
-            else
-            {
+            else {
                 printf("회원가입 실패\n");
                 Sleep(1000);
                 continue;
             }
         }
 
-        if (signin())
-        {
+        if (signin()) {
             printf("로그인 성공!\n");
             Sleep(800);
             settingPath();
             break;
         }
-        else
-        {
+        else {
             printf("로그인 실패. 회원가입 하시겠습니까? (y/n)\n");
             char select = getch();
-            if (select == 'y')
-            {
+            if (select == 'y') {
                 sign = 0;
             }
         }
     }
 }
 
-int signup()
-{
+// -----------------------------
+// 회원가입
+// -----------------------------
+int signup() {
     int select = inputLogin("회원가입을 종료하려면 0, 로그인 하려면 1.\n");
 
-    if (select == 1)
-    {
+    if (select == 1) {
         return 1;
     }
 
-    if (!sameID())
-    {
+    if (!sameID()) {
         printf("이미 존재하는 아이디입니다.\n");
         Sleep(1000);
         return 0;
@@ -108,27 +102,25 @@ int signup()
     return 1;
 }
 
-int signin()
-{
-    FILE* fp = fopen("c:\\TodoList\\member.txt", "r");
-    if (!fp)
-    {
+// -----------------------------
+// 로그인 시도
+// -----------------------------
+int signin() {
+    FILE* fp = fopen("C:\\TodoList\\member.txt", "r");
+    if (!fp) {
         printf("회원 정보를 확인할 수 없습니다.\n");
         return 0;
     }
 
-    char line[LINE];
-    char fileId[MAXLOGIN];
-    char filePw[MAXLOGIN];
+    char line[MAX_PATH_LEN];
+    char fileId[MAX_ID_LEN];
+    char filePw[MAX_ID_LEN];
 
     inputLogin("로그인 (0 입력시 종료)\n");
 
-    while (fgets(line, sizeof(line), fp))
-    {
-        if (sscanf(line, "ID:%[^,],PW:%s", fileId, filePw) == 2)
-        {
-            if (!strcmp(id, fileId) && !strcmp(pw, filePw))
-            {
+    while (fgets(line, sizeof(line), fp)) {
+        if (sscanf(line, "ID:%[^,],PW:%s", fileId, filePw) == 2) {
+            if (!strcmp(id, fileId) && !strcmp(pw, filePw)) {
                 fclose(fp);
                 return 1;
             }
@@ -139,23 +131,21 @@ int signin()
     return 0;
 }
 
-int sameID()
-{
-    FILE* fp = fopen("c:\\TodoList\\member.txt", "r");
-    if (!fp)
-    {
+// -----------------------------
+// 아이디 중복 확인
+// -----------------------------
+int sameID() {
+    FILE* fp = fopen("C:\\TodoList\\member.txt", "r");
+    if (!fp) {
         return 1;
     }
 
-    char line[LINE];
-    char fileId[MAXLOGIN];
+    char line[MAX_PATH_LEN];
+    char fileId[MAX_ID_LEN];
 
-    while (fgets(line, sizeof(line), fp))
-    {
-        if (sscanf(line, "ID:%[^,]", fileId) == 1)
-        {
-            if (!strcmp(id, fileId))
-            {
+    while (fgets(line, sizeof(line), fp)) {
+        if (sscanf(line, "ID:%[^,]", fileId) == 1) {
+            if (!strcmp(id, fileId)) {
                 fclose(fp);
                 return 0;
             }

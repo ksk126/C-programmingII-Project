@@ -2,17 +2,18 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <conio.h>
 #include <windows.h>
 #include <direct.h>
 #include "struct.h"
 #include "function.h"
 #include "global_variable.h"
+#include "utils.h"   // 공통 함수 사용
 
-// 메뉴 출력
-void mainUi()
-{
-    system("cls");
+// -----------------------------
+// 메인 메뉴 출력
+// -----------------------------
+void mainUi() {
+    clearScreen();
 
     int select = 0;
     print0check();
@@ -28,34 +29,27 @@ void mainUi()
     scanf("%d", &select);
 
     uiConnect(select);
-
-    return;
 }
 
-// ui입력 처리
-void uiConnect(int select)
-{
-    switch (select)
-    {
+// -----------------------------
+// 메인 메뉴 입력 처리
+// -----------------------------
+void uiConnect(int select) {
+    switch (select) {
     case 0:
         login(1);
         break;
-
     case 1:
         category();
         break;
-
     case 2:
         friends();
         break;
-
     case 3:
         teams();
         break;
-
     case 4:
         exit(0);
-
     default:
         printf("잘못 입력하였습니다.\n");
         Sleep(1000);
@@ -63,10 +57,11 @@ void uiConnect(int select)
     }
 }
 
-void categoryConnect(int select)
-{
-    switch (select)
-    {
+// -----------------------------
+// 카테고리 메뉴 연결
+// -----------------------------
+void categoryConnect(int select) {
+    switch (select) {
     case 0:
         mainUi();
         break;
@@ -92,22 +87,20 @@ void categoryConnect(int select)
     }
 }
 
-void friendsConnect(int select)
-{
-    switch (select)
-    {
+// -----------------------------
+// 친구 메뉴 연결
+// -----------------------------
+void friendsConnect(int select) {
+    switch (select) {
     case 0:
         mainUi();
         break;
-
     case 1:
         appendfriend();
         break;
-
     case 2:
         removefriend();
         break;
-
     default:
         printf("잘못 입력하였습니다.\n");
         Sleep(1000);
@@ -115,16 +108,32 @@ void friendsConnect(int select)
     }
 }
 
-void teamsConnect(int select)
-{
-    switch (select)
-    {
-    case 0: mainUi(); break;
-    case 1: inputTeamName(); break;
-    case 2: retouchTeam(); break;
-    case 3: removeTeam(); break;
-    case 4: selectTeamForTask(1); break; // 팀 할일 추가
-    case 5: selectTeamForTask(2); break; // 팀 할일 삭제
-    default: printf("잘못 입력하였습니다.\n"); Sleep(1000); break;
+// -----------------------------
+// 팀 메뉴 연결
+// -----------------------------
+void teamsConnect(int select) {
+    switch (select) {
+    case 0:
+        mainUi();
+        break;
+    case 1:
+        inputTeamName();
+        break;
+    case 2:
+        retouchTeam();
+        break;
+    case 3:
+        removeTeam();
+        break;
+    case 4:
+        selectTeamForTask(1); // 팀 할일 추가
+        break;
+    case 5:
+        selectTeamForTask(2); // 팀 할일 삭제
+        break;
+    default:
+        printf("잘못 입력하였습니다.\n");
+        Sleep(1000);
+        break;
     }
 }

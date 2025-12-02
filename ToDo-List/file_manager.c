@@ -2,37 +2,39 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <conio.h>
 #include <windows.h>
 #include <direct.h>
 #include "struct.h"
 #include "function.h"
 #include "global_variable.h"
 
-void openfile()
-{
-    _mkdir("c:\\TodoList");
+// -----------------------------
+// 기본 TodoList 디렉터리 및 회원 파일 생성
+// -----------------------------
+void openfile() {
+    _mkdir("C:\\TodoList");
 
-    FILE* fp = fopen("c:\\TodoList\\member.txt", "a");
-    if (!fp)
-    {
+    FILE* fp = fopen("C:\\TodoList\\member.txt", "a");
+    if (!fp) {
         printf("파일 열기 실패\n");
         exit(0);
     }
     fclose(fp);
 }
 
-void makefile()
-{
+// -----------------------------
+// 사용자 디렉터리 생성
+// -----------------------------
+void makefile() {
     _mkdir(path);
-    return;
 }
 
-void appendMember()
-{
-    FILE* fp = fopen("c:\\TodoList\\member.txt", "a");
-    if (!fp)
-    {
+// -----------------------------
+// 회원 정보 추가 및 개인 파일 생성
+// -----------------------------
+void appendMember() {
+    FILE* fp = fopen("C:\\TodoList\\member.txt", "a");
+    if (!fp) {
         printf("파일 정보 추가 실패\n");
         exit(0);
     }
@@ -47,57 +49,64 @@ void appendMember()
     appendTeamsFile();
 }
 
-void appendListFile()
-{
+// -----------------------------
+// 개인 일정 파일 생성
+// -----------------------------
+void appendListFile() {
     FILE* userFile = fopen(pathlist, "w");
-    if (!userFile)
-    {
+    if (!userFile) {
         printf("개인 파일 생성 실패\n");
         exit(0);
     }
     fclose(userFile);
 }
 
-void appendCategoryFile()
-{
+// -----------------------------
+// 카테고리 파일 생성
+// -----------------------------
+void appendCategoryFile() {
     _mkdir(pathcategory);
     FILE* userFile = fopen(pathcategoryList, "w");
-    if (!userFile)
-    {
+    if (!userFile) {
         printf("개인 파일 생성 실패\n");
         exit(0);
     }
     fclose(userFile);
-    return;
 }
 
-void appendFriendsFile()
-{
+// -----------------------------
+// 친구 목록 파일 생성
+// -----------------------------
+void appendFriendsFile() {
     FILE* userFile = fopen(pathfriends, "w");
-    if (!userFile)
-    {
+    if (!userFile) {
         printf("개인 파일 생성 실패\n");
         exit(0);
     }
     fclose(userFile);
-    return;
 }
 
-void appendTeamsFile()
-{
+// -----------------------------
+// 팀 목록 파일 생성
+// -----------------------------
+void appendTeamsFile() {
     FILE* userFile = fopen(pathteamsFile, "a");
-    if (!userFile) { printf("개인 팀 파일 생성 실패\n"); Sleep(1000); return; }
+    if (!userFile) {
+        printf("개인 팀 파일 생성 실패\n");
+        Sleep(1000);
+        return;
+    }
     fclose(userFile);
 
     _mkdir(pathteamsDir);
 }
 
-
-void appendCategory()
-{
+// -----------------------------
+// 카테고리 추가
+// -----------------------------
+void appendCategory() {
     FILE* fp = fopen(pathcategoryList, "a");
-    if (!fp)
-    {
+    if (!fp) {
         printf("파일 정보 추가 실패\n");
         exit(0);
     }
@@ -106,13 +115,12 @@ void appendCategory()
     fclose(fp);
 
     appendCategoryListFile();
-
-    return;
 }
 
-void appendCategoryListFile()
-{
+// -----------------------------
+// 카테고리 디렉터리 생성
+// -----------------------------
+void appendCategoryListFile() {
     settingCategoryPath();
-
     _mkdir(pathcategoryfile);
 }

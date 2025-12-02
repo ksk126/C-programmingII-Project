@@ -135,13 +135,14 @@
     <ClCompile Include="main.c" />
     <ClCompile Include="todo.c" />
     <ClCompile Include="ui.c" />
-    <ClCompile Include="save_and_load.c" />
     <ClCompile Include="teams.c" />
+    <ClCompile Include="utils.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="function.h" />
     <ClInclude Include="global_variable.h" />
     <ClInclude Include="struct.h" />
+    <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -39,10 +39,10 @@
     <ClCompile Include="file_manager.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="save_and_load.c">
+    <ClCompile Include="todo.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="todo.c">
+    <ClCompile Include="utils.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -54,6 +54,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="struct.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
