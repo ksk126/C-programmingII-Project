@@ -195,28 +195,3 @@ void retouchTodo() {
         }
     }
 }
-
-// -----------------------------
-// 미완료 일정 출력
-// -----------------------------
-void print0check() {
-    int count = loadTodos();
-    qsortTodos(count);
-
-    int printed = 0;
-    for (int i = 0; i < count; i++) {
-        if (todos[i].check == 0) {
-            if (!printed) {
-                printf("------미완료된 목록------\n");
-            }
-            printf("%02d/%02d | %s | %s\n",
-                todos[i].month, todos[i].day,
-                todos[i].tasks, todos[i].memo);
-            printed = 1;
-        }
-    }
-
-    if (!printed) {
-        printf("(미완료 일정 없음)\n");
-    }
-}

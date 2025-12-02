@@ -15,7 +15,8 @@
 int main() {
     openfile();
     run();
-    return 0;
+    return 
+        ;
 }
 
 // -----------------------------

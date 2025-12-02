@@ -62,7 +62,6 @@ void removeTeamTask(const char* teamName);
 void printTeamSummary();
 
 // 일정 관리
-void print0check();
 int loadTodos();
 void saveTodos(int count);
 void appendTodo();

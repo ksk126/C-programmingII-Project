@@ -16,7 +16,6 @@ void mainUi() {
     clearScreen();
 
     int select = 0;
-    print0check();
     printf("\n");
 
     printf("----------메인 메뉴---------\n");
