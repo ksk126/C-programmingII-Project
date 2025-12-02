@@ -24,7 +24,7 @@ void mainUi() {
     TitleOnBar(30);
 
     // 메뉴 항목들
-    printMiddleLine("카테고리 메뉴", width);
+    printMiddleLine("메인 메뉴", width);
     printMiddleLine("[1] 카테고리 관리", width);
     printMiddleLine("[2] 친구 관리", width);
     printMiddleLine("[3] 팀 관리", width);
