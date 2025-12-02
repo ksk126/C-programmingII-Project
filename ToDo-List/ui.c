@@ -28,9 +28,6 @@ void mainUi() {
     printMiddleLine("[1] 카테고리 관리", width);
     printMiddleLine("[2] 친구 관리", width);
     printMiddleLine("[3] 팀 관리", width);
-    printMiddleLine("[4] 개인 일정 추가", width);
-    printMiddleLine("[5] 개인 일정 수정", width);
-    printMiddleLine("[6] 개인 일정 완료", width);
     printMiddleLine("[0] 로그아웃", width);
 
     // 아랫줄
