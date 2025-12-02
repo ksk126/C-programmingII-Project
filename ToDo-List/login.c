@@ -9,7 +9,6 @@
 #include "function.h"
 #include "global_variable.h"
 
-// 회원가입, 로그인 입력
 int inputLogin(const char* message)
 {
     printf("%s", message);
@@ -30,7 +29,6 @@ int inputLogin(const char* message)
     return 0;
 }
 
-// 로그인 총괄 함수
 void login(int sign)
 {
     FILE* fp = fopen("c:\\TodoList\\member.txt", "r");
@@ -87,7 +85,6 @@ void login(int sign)
     }
 }
 
-// 회원가입
 int signup()
 {
     int select = inputLogin("회원가입을 종료하려면 0, 로그인 하려면 1.\n");
@@ -111,7 +108,6 @@ int signup()
     return 1;
 }
 
-// 로그인
 int signin()
 {
     FILE* fp = fopen("c:\\TodoList\\member.txt", "r");
@@ -143,7 +139,6 @@ int signin()
     return 0;
 }
 
-// 같은 아이디인지 확인
 int sameID()
 {
     FILE* fp = fopen("c:\\TodoList\\member.txt", "r");

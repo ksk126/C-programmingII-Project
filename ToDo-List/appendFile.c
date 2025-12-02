@@ -85,12 +85,10 @@ void appendFriendsFile()
 
 void appendTeamsFile()
 {
-    // Create per-user teams.txt
     FILE* userFile = fopen(pathteamsFile, "a");
     if (!userFile) { printf("개인 팀 파일 생성 실패\n"); Sleep(1000); return; }
     fclose(userFile);
 
-    // Ensure shared team dir exists
     _mkdir(pathteamsDir);
 }
 
