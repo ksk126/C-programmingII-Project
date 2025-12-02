@@ -27,28 +27,6 @@ void friends()
     return;
 }
 
-void friendsConnect(int select)
-{
-    switch (select)
-    {
-    case 0:
-        mainUi();
-        break;
-
-    case 1:
-        appendfriend();
-        break;
-
-    case 2:
-        removefriend();
-        break;
-
-    default:
-        printf("잘못 입력하였습니다.\n");
-        Sleep(1000);
-        break;
-    }
-}
 void appendfriend()
 {
     system("cls");

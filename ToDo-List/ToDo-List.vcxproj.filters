@@ -24,7 +24,7 @@
     <ClCompile Include="login.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="main_ui.c">
+    <ClCompile Include="ui.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="category.c">
@@ -36,10 +36,13 @@
     <ClCompile Include="friends.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="appendFile.c">
+    <ClCompile Include="file_manager.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="save_and_load.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="todo.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

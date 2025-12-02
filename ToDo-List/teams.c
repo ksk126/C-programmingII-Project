@@ -79,21 +79,6 @@ void teams()
     }
 }
 
-// 메뉴 연결
-void teamsConnect(int select)
-{
-    switch (select)
-    {
-    case 0: mainUi(); break;
-    case 1: inputTeamName(); break;
-    case 2: retouchTeam(); break;
-    case 3: removeTeam(); break;
-    case 4: selectTeamForTask(1); break; // 팀 할일 추가
-    case 5: selectTeamForTask(2); break; // 팀 할일 삭제
-    default: printf("잘못 입력하였습니다.\n"); Sleep(1000); break;
-    }
-}
-
 // 팀 추가
 void inputTeamName()
 {
@@ -375,7 +360,12 @@ void removeTeamTask(const char* teamName)
     }
     fclose(fp);
 
-    if (count == 0) { printf("삭제할 팀 할일이 없습니다.\n"); Sleep(1000); return; }
+    if (count == 0)
+    {
+        printf("삭제할 팀 할일이 없습니다.\n");
+        Sleep(1000);
+        return;
+    }
 
     printf("------ 팀 '%s' 할일 목록 ------\n", teamName);
     for (int i = 0; i < count; i++) printf("[%d] %s\n", i + 1, tasks[i]);

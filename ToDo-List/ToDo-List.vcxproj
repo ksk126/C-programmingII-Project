@@ -127,13 +127,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="appendFile.c" />
+    <ClCompile Include="file_manager.c" />
     <ClCompile Include="category.c" />
     <ClCompile Include="friends.c" />
     <ClCompile Include="global_variable.c" />
     <ClCompile Include="login.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="main_ui.c" />
+    <ClCompile Include="todo.c" />
+    <ClCompile Include="ui.c" />
     <ClCompile Include="save_and_load.c" />
     <ClCompile Include="teams.c" />
   </ItemGroup>

@@ -32,35 +32,6 @@ void category()
     return;
 }
 
-void categoryConnect(int select)
-{
-    switch (select)
-    {
-    case 0:
-        mainUi();
-        break;
-    case 1:
-        inputCategoryName();
-        break;
-    case 2:
-        retouchCategory();
-        break;
-    case 3:
-        removeCategory();
-        break;
-    case 4:
-        appendTodoInCategory();
-        break;
-    case 5:
-        retouchTodoInCategory();
-        break;
-    default:
-        printf("잘못 입력하였습니다.\n");
-        Sleep(1000);
-        break;
-    }
-}
-
 // -----------------------------
 // 카테고리 추가
 // -----------------------------
